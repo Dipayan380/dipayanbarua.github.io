@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,22 +43,25 @@
   <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" class="btn btn-primary">Connect</a>
 </div>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="grid-floor"></div>
-  <div class="hero-glow"></div>
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
+<!-- ═══ THE GATEWAY ═══ -->
+<section class="gateway">
+  <!-- Three.js canvas fills the background -->
+  <div class="gateway-canvas" id="gateway-canvas"></div>
+  <!-- gradient overlay so text is readable -->
+  <div class="gateway-overlay"></div>
+  <!-- content on top -->
+  <div class="gateway-content">
+    <div class="gateway-copy">
       <span class="eyebrow">Systems Engineer · Sydney</span>
       <h1>Learning the Microsoft cloud, <span class="accent">in public.</span></h1>
       <p class="lede">I'm Dipayan — a Systems Engineer documenting everything I learn about Entra ID, Intune, Azure and Microsoft 365. Real guides written while I master them, straight from the lab.</p>
-      <div class="hero-cta">
+      <div class="gateway-cta">
         <a href="#topics" class="btn btn-primary">Explore topics →</a>
         <a href="#about" class="btn btn-ghost">About me</a>
       </div>
-      <div class="hero-meta"><span class="dot"></span>Currently exploring: Conditional Access &amp; identity governance</div>
+      <div class="gateway-meta"><span class="dot"></span>Currently exploring: Conditional Access &amp; identity governance</div>
     </div>
-    <div class="pcard-wrap">
+    <div class="gateway-card">
       <div class="profile" data-tilt>
         <div class="profile-top">
           <div class="avatar">DB</div>
@@ -200,6 +204,8 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="assets/gateway.js"></script>
 <script src="assets/app.js"></script>
 </body>
 </html>
