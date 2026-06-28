@@ -2,210 +2,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dipayan Barua — Learning the Microsoft cloud in public</title>
-<meta name="description" content="Systems Engineer Dipayan Barua documents everything he learns about Entra ID, Intune, Azure and Microsoft 365 — real guides from a real lab.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Microsoft cloud learning hub with interactive 3D diagrams, hands-on how-tos, and career-mapped content across Azure, Entra ID, Intune, Defender, and 51 technical clusters.">
+  <meta name="author" content="Dipayan Barua">
+  <meta name="theme-color" content="#060810">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Dipayan Barua — Microsoft Cloud Learning Hub">
+  <meta property="og:description" content="10 domains, 51 clusters, 600+ 3D diagrams. Learn Azure, Entra ID, Intune, Defender, DevOps, and more with interactive visualisations and real-world scenarios.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dipayanbarua.com.au">
+
+  <title>Dipayan Barua — Microsoft Cloud Learning Hub</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
 
-<div id="cursor-glow"></div>
+  <!-- Cursor Glow -->
+  <div class="cursor-glow" aria-hidden="true"></div>
 
-<!-- NAV -->
-<header id="header">
-  <nav>
-    <a href="/" class="logo"><span class="logo-mark">DB</span><span>Dipayan Barua<small>LEARNING THE CLOUD</small></span></a>
-    <div class="nav-links">
-      <a href="#topics">Topics</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Home">
+        <span class="monogram">DB</span>
+        <span>dipayanbarua</span>
+      </a>
+
+      <div class="nav-links" role="menubar">
+        <a href="/0-stack-floor/" class="nav-link" role="menuitem">Stack Floor</a>
+        <a href="/1-compute/" class="nav-link" role="menuitem">Compute</a>
+        <a href="/2-storage/" class="nav-link" role="menuitem">Storage</a>
+        <a href="/3-networking/" class="nav-link" role="menuitem">Networking</a>
+        <a href="/4-identity-security/" class="nav-link" role="menuitem">Identity</a>
+        <a href="/5-operations/" class="nav-link" role="menuitem">Operations</a>
+        <a href="/6-iac-devops/" class="nav-link" role="menuitem">DevOps</a>
+        <a href="/7-resilience/" class="nav-link" role="menuitem">Resilience</a>
+        <a href="/8-hybrid-workplace/" class="nav-link" role="menuitem">Workplace</a>
+        <a href="/9-ai-iot/" class="nav-link" role="menuitem">AI & IoT</a>
+      </div>
+
+      <div class="nav-search" role="button" tabindex="0" aria-label="Search (⌘K)">
+        <span class="nav-search-text">Search</span>
+        <span class="nav-search-kbd" aria-hidden="true">⌘K</span>
+      </div>
+
+      <button class="nav-mobile-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </div>
-    <div class="nav-search" style="position:relative">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="navSearch" placeholder="Search topics..." aria-label="Search topics">
-      <kbd>⌘K</kbd>
-      <div class="search-results" id="navResults"></div>
-    </div>
-    <div class="nav-right">
-      <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Connect →</a>
-    </div>
-    <button class="menu-toggle" id="menuToggle" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   </nav>
-</header>
 
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <a href="#topics">Topics</a><a href="#about">About</a><a href="#contact">Contact</a>
-  <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" class="btn btn-primary">Connect</a>
-</div>
-
-<!-- ═══ THE GATEWAY ═══ -->
-<section class="gateway">
-  <!-- Three.js canvas fills the background -->
-  <div class="gateway-canvas" id="gateway-canvas"></div>
-  <!-- gradient overlay so text is readable -->
-  <div class="gateway-overlay"></div>
-  <!-- content on top -->
-  <div class="gateway-content">
-    <div class="gateway-copy">
-      <span class="eyebrow">Systems Engineer · Sydney</span>
-      <h1>Learning the Microsoft cloud, <span class="accent">in public.</span></h1>
-      <p class="lede">I'm Dipayan — a Systems Engineer documenting everything I learn about Entra ID, Intune, Azure and Microsoft 365. Real guides written while I master them, straight from the lab.</p>
-      <div class="gateway-cta">
-        <a href="#topics" class="btn btn-primary">Explore topics →</a>
-        <a href="#about" class="btn btn-ghost">About me</a>
+  <!-- Command Palette -->
+  <div class="cmd-overlay" role="dialog" aria-label="Search palette" aria-modal="true">
+    <div class="cmd-palette">
+      <div class="cmd-input-wrap">
+        <span class="cmd-icon" aria-hidden="true">⌕</span>
+        <input type="text" class="cmd-input" placeholder="Search domains, clusters, Azure services, certs..." aria-label="Search">
       </div>
-      <div class="gateway-meta"><span class="dot"></span>Currently exploring: Conditional Access &amp; identity governance</div>
+      <div class="cmd-results" role="listbox"></div>
+      <div class="cmd-footer">
+        <span><kbd>↑↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
     </div>
-    <div class="gateway-card">
-      <div class="profile" data-tilt>
-        <div class="profile-top">
+  </div>
+
+  <!-- ═══ THE GATEWAY ═══ -->
+  <header class="gateway">
+    <div id="gateway-canvas" class="gateway-canvas" aria-hidden="true"></div>
+
+    <div class="gateway-content">
+      <div class="gateway-text">
+        <p class="eyebrow">Microsoft Cloud Learning Hub</p>
+        <h1>Learn the cloud<br>by <span class="highlight">building</span> it.</h1>
+        <p class="subtitle">
+          10 domains. 51 clusters. 600+ interactive 3D diagrams.
+          From foundational networking to Azure AI — theory, architecture,
+          click-by-click how-tos, and real-world scenarios mapped to
+          15 career paths.
+        </p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="#explore" class="btn btn-primary">Explore the stack</a>
+          <a href="about.html" class="btn btn-ghost">About this project</a>
+        </div>
+      </div>
+
+      <div class="gateway-profile">
+        <div class="profile-card">
           <div class="avatar">DB</div>
-          <div><div class="nm">Dipayan Barua</div><div class="rl">Systems Engineer @ Compnow</div></div>
-        </div>
-        <div class="profile-line">Building, breaking and documenting the Microsoft cloud — one pillar at a time.</div>
-        <div class="profile-tags">
-          <span class="ptag">Entra ID</span><span class="ptag">Intune</span><span class="ptag">Azure</span>
-          <span class="ptag">M365</span><span class="ptag">PowerShell</span><span class="ptag">Zscaler</span>
+          <div class="name">Dipayan Barua</div>
+          <div class="role">Systems Engineer · Entra ID · Intune · Azure</div>
+          <div class="stats">
+            <div class="stat">
+              <div class="stat-value">10</div>
+              <div class="stat-label">Domains</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">51</div>
+              <div class="stat-label">Clusters</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">600+</div>
+              <div class="stat-label">3D Diagrams</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">15</div>
+              <div class="stat-label">Career Paths</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </header>
 
-<!-- SEARCH -->
-<section style="padding:0 0 20px;position:relative;z-index:3">
-  <div class="wrap">
-    <div class="home-search">
-      <div class="home-search-bar">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3" stroke-width="2"/></svg>
-        <input type="text" id="homeSearch" placeholder="Search any topic — Conditional Access, Autopilot, RBAC..." aria-label="Search topics">
-        <kbd>⌘K</kbd>
+  <!-- ═══ DOMAIN CARDS ═══ -->
+  <section id="explore" class="section">
+    <div class="section-header">
+      <p class="eyebrow">10 Domains</p>
+      <h2>Explore the stack</h2>
+      <p class="lead">Every layer of the Microsoft cloud — from physical infrastructure to AI. Each domain contains clusters of hands-on content with 3D diagrams, how-to guides, and career mapping.</p>
+    </div>
+
+    <div class="domain-grid">
+
+      <a href="/0-stack-floor/" class="domain-card reveal" style="--card-accent: #A0AEC0;">
+        <span class="card-number">00</span>
+        <h3 class="card-title">The Stack Floor</h3>
+        <p class="card-desc">IT fundamentals, networking, virtualisation, and scripting. The foundation everything else builds on.</p>
+        <div class="card-meta">
+          <span class="card-badge">11 clusters</span>
+          <span>Physical · Foundation</span>
+        </div>
+      </a>
+
+      <a href="/1-compute/" class="domain-card reveal" style="--card-accent: #FF6B00;">
+        <span class="card-number">01</span>
+        <h3 class="card-title">Compute & Application Platform</h3>
+        <p class="card-desc">Virtual machines, serverless functions, containers, Kubernetes, and scalability patterns.</p>
+        <div class="card-meta">
+          <span class="card-badge">5 clusters</span>
+          <span>IaaS · PaaS</span>
+        </div>
+      </a>
+
+      <a href="/2-storage/" class="domain-card reveal" style="--card-accent: #00FFD1;">
+        <span class="card-number">02</span>
+        <h3 class="card-title">Storage & Data</h3>
+        <p class="card-desc">Blob, disk, and file storage. Azure SQL, Cosmos DB, Synapse Analytics, and data pipelines.</p>
+        <div class="card-meta">
+          <span class="card-badge">5 clusters</span>
+          <span>IaaS · PaaS</span>
+        </div>
+      </a>
+
+      <a href="/3-networking/" class="domain-card reveal" style="--card-accent: #00E5FF;">
+        <span class="card-number">03</span>
+        <h3 class="card-title">Networking</h3>
+        <p class="card-desc">VNets, VPN Gateway, ExpressRoute, load balancers, firewalls, CDN, and global Azure regions.</p>
+        <div class="card-meta">
+          <span class="card-badge">5 clusters</span>
+          <span>IaaS</span>
+        </div>
+      </a>
+
+      <a href="/4-identity-security/" class="domain-card reveal" style="--card-accent: #4D7DFF;">
+        <span class="card-number">04</span>
+        <h3 class="card-title">Identity & Security</h3>
+        <p class="card-desc">Entra ID, RBAC, Conditional Access, Key Vault, Microsoft Defender, Purview, and compliance.</p>
+        <div class="card-meta">
+          <span class="card-badge">6 clusters</span>
+          <span>Cloud Management</span>
+        </div>
+      </a>
+
+      <a href="/5-operations/" class="domain-card reveal" style="--card-accent: #00FF88;">
+        <span class="card-number">05</span>
+        <h3 class="card-title">Operations & Management</h3>
+        <p class="card-desc">Azure Monitor, Log Analytics, governance, policy, cost management, and patch management.</p>
+        <div class="card-meta">
+          <span class="card-badge">5 clusters</span>
+          <span>Cloud Management</span>
+        </div>
+      </a>
+
+      <a href="/6-iac-devops/" class="domain-card reveal" style="--card-accent: #BF5AF2;">
+        <span class="card-number">06</span>
+        <h3 class="card-title">Infrastructure as Code & DevOps</h3>
+        <p class="card-desc">Bicep, Terraform, Azure Automation, CI/CD pipelines, GitHub Actions, and source control.</p>
+        <div class="card-meta">
+          <span class="card-badge">5 clusters</span>
+          <span>PaaS</span>
+        </div>
+      </a>
+
+      <a href="/7-resilience/" class="domain-card reveal" style="--card-accent: #FF3B3B;">
+        <span class="card-number">07</span>
+        <h3 class="card-title">Resilience & Continuity</h3>
+        <p class="card-desc">Azure Backup, Site Recovery, high availability, availability zones, and BCDR planning.</p>
+        <div class="card-meta">
+          <span class="card-badge">4 clusters</span>
+          <span>IaaS</span>
+        </div>
+      </a>
+
+      <a href="/8-hybrid-workplace/" class="domain-card reveal" style="--card-accent: #FF2D78;">
+        <span class="card-number">08</span>
+        <h3 class="card-title">Hybrid, Endpoint & Workplace</h3>
+        <p class="card-desc">Windows Server, Linux on Azure, Azure Arc, Intune, M365 Admin, SharePoint, and OneDrive.</p>
+        <div class="card-meta">
+          <span class="card-badge">6 clusters</span>
+          <span>SaaS · Cloud Management</span>
+        </div>
+      </a>
+
+      <a href="/9-ai-iot/" class="domain-card reveal" style="--card-accent: #FFD60A;">
+        <span class="card-number">09</span>
+        <h3 class="card-title">AI, Data & IoT</h3>
+        <p class="card-desc">Azure Machine Learning, OpenAI Service, Cognitive AI Services, IoT Hub, and Digital Twins.</p>
+        <div class="card-meta">
+          <span class="card-badge">4 clusters</span>
+          <span>PaaS</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ═══ CAREER PATHS TEASER ═══ -->
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Career Mapping</p>
+      <h2>Every cluster leads somewhere</h2>
+      <p class="lead">15 real-world job roles mapped to the exact clusters you need to study. Pick a role, see your learning path.</p>
+    </div>
+
+    <div class="domain-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+      <div class="cluster-card reveal">
+        <span class="cluster-id">17 clusters</span>
+        <span class="cluster-title">Azure Cloud Engineer</span>
       </div>
-      <div class="search-results" id="homeResults" style="top:58px;left:0;right:0;transform:none;width:auto"></div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">18 clusters</span>
+        <span class="cluster-title">Solutions Architect</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">12 clusters</span>
+        <span class="cluster-title">DevOps Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">8 clusters</span>
+        <span class="cluster-title">Security Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">12 clusters</span>
+        <span class="cluster-title">Site Reliability Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">5 clusters</span>
+        <span class="cluster-title">IAM / Identity Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">8 clusters</span>
+        <span class="cluster-title">Network Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">7 clusters</span>
+        <span class="cluster-title">Endpoint Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">13 clusters</span>
+        <span class="cluster-title">Systems Administrator</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">3 clusters</span>
+        <span class="cluster-title">IT Support Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">6 clusters</span>
+        <span class="cluster-title">Data Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">4 clusters</span>
+        <span class="cluster-title">AI / ML Engineer</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">3 clusters</span>
+        <span class="cluster-title">Database Administrator</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">7 clusters</span>
+        <span class="cluster-title">Cloud Governance Specialist</span>
+      </div>
+      <div class="cluster-card reveal">
+        <span class="cluster-id">4 clusters</span>
+        <span class="cluster-title">Backup & DR Specialist</span>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- TOPICS -->
-<section class="sec" id="topics">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">What I'm mastering</span>
-      <h2>Six areas of the Microsoft cloud.</h2>
-      <p>Each one gets the same treatment — learn it deeply, build it in the lab, then write it down clearly enough that anyone could follow.</p>
-    </div>
-    <div class="cat-grid">
-
-      <a href="identity-access/" class="cat-card reveal" data-tilt>
-        <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
-        <h3>Identity &amp; Access</h3>
-        <p>The foundation everything else trusts — identity lifecycle, authentication, and the modern access perimeter.</p>
-        <div class="cat-pillars">
-          <span class="cat-pill">Entra ID</span><span class="cat-pill">Active Directory</span><span class="cat-pill">Conditional Access</span>
-        </div>
-      </a>
-
-      <a href="endpoint/" class="cat-card reveal" data-tilt>
-        <div class="cat-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
-        <h3>Endpoint Management</h3>
-        <p>Getting devices from unboxing to compliant and managed — zero-touch, policy-driven, at scale.</p>
-        <div class="cat-pillars">
-          <span class="cat-pill">Intune</span><span class="cat-pill">Autopilot</span><span class="cat-pill">Group Policy</span>
-        </div>
-      </a>
-
-      <a href="cloud/" class="cat-card reveal" data-tilt>
-        <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M4 16a4 4 0 0 1 .9-7.9 5.5 5.5 0 0 1 10.7-1.6A4.5 4.5 0 0 1 18 16z"/></svg></div>
-        <h3>Cloud Infrastructure</h3>
-        <p>Azure resources, hybrid networking, Windows Server, and building a home lab that actually teaches you.</p>
-        <div class="cat-pillars">
-          <span class="cat-pill">Azure</span><span class="cat-pill">Windows Server</span><span class="cat-pill">Networking</span>
-        </div>
-      </a>
-
-      <a href="productivity/" class="cat-card reveal" data-tilt>
-        <div class="cat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
-        <h3>Productivity &amp; Collaboration</h3>
-        <p>The M365 suite from an admin's perspective — mail flow, document management, and tenant governance.</p>
-        <div class="cat-pillars">
-          <span class="cat-pill">M365 Admin</span><span class="cat-pill">Exchange</span><span class="cat-pill">SharePoint</span><span class="cat-pill">OneDrive</span><span class="cat-pill">Teams</span>
-        </div>
-      </a>
-
-      <a href="security/" class="cat-card reveal" data-tilt>
-        <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div>
-        <h3>Security</h3>
-        <p>Threat protection, detection and response across the Microsoft and third-party security stack.</p>
-        <div class="cat-pillars">
-          <span class="cat-pill">Defender</span><span class="cat-pill">Sentinel</span><span class="cat-pill">SentinelOne</span>
-        </div>
-      </a>
-
-      <a href="automation/" class="cat-card reveal" data-tilt>
-        <div class="cat-icon"><svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div>
-        <h3>Automation &amp; Tooling</h3>
-        <p>Scripts, ITSM platforms, and the glue that connects everything — because manual work doesn't scale.</p>
-        <div class="cat-pillars">
-          <span class="cat-pill">PowerShell</span><span class="cat-pill">ServiceNow</span><span class="cat-pill">Python</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="sec about-sec" id="about">
-  <div class="wrap">
-    <div class="about-inner reveal">
-      <span class="eyebrow">About</span>
-      <h2>Hi, I'm Dipayan.</h2>
-      <p>I'm a Systems Engineer in Sydney, working across enterprise Microsoft environments every day. This site is where I learn out loud.</p>
-      <p>I've always thought the fastest way to truly understand something is to build it, break it, and then explain it simply. So that's what I do here — take one piece of the Microsoft cloud at a time and write it down clearly enough that it'd help the version of me from a week ago.</p>
-      <p>When I'm not in the terminal, you'll find me travelling or behind a camera.</p>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="sec" id="contact">
-  <div class="wrap">
-    <div class="contact-box reveal">
-      <span class="eyebrow" style="justify-content:center">Get in touch</span>
-      <h2>Let's talk cloud.</h2>
-      <p>Hiring, collaborating, or just want to compare lab notes? I'd love to hear from you.</p>
+  <!-- ═══ CONTACT ═══ -->
+  <section class="section">
+    <div class="contact-card reveal">
+      <p class="eyebrow">Get in touch</p>
+      <h2 style="margin-top: 8px;">Built by Dipayan Barua</h2>
+      <p style="color: var(--text-secondary); margin-top: 8px;">Systems Engineer based in Sydney, Australia. Building this platform as a comprehensive Microsoft cloud learning resource.</p>
       <div class="contact-links">
-        <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" class="btn btn-primary">Connect on LinkedIn</a>
-        <a href="mailto:it.dipayan@gmail.com" class="btn btn-ghost">Email me</a>
+        <a href="https://linkedin.com/in/dipayanbarua" class="contact-link" target="_blank" rel="noopener">
+          <span>LinkedIn</span>
+        </a>
+        <a href="mailto:hello@dipayanbarua.com.au" class="contact-link">
+          <span>Email</span>
+        </a>
+        <a href="https://github.com/Dipayan380" class="contact-link" target="_blank" rel="noopener">
+          <span>GitHub</span>
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="wrap">
-    <div class="foot-row">
-      <a href="/" class="logo"><span class="logo-mark">DB</span><span>Dipayan Barua</span></a>
-      <div class="socials">
-        <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3zM6.5 8.3a1.8 1.8 0 1 1 0-3.5 1.8 1.8 0 0 1 0 3.5zM19 19h-3v-4.7c0-1.1 0-2.6-1.6-2.6S12.6 13 12.6 14.2V19h-3v-9h2.9v1.2h.05a3.2 3.2 0 0 1 2.9-1.6c3 0 3.6 2 3.6 4.6z"/></svg></a>
-        <a href="mailto:it.dipayan@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.5V18h16V7.5l-8 5z"/></svg></a>
-      </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <span>&copy; 2026 Dipayan Barua. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/Dipayan380" target="_blank" rel="noopener">GitHub</a>
     </div>
-    <div class="foot-row" style="margin-top:20px;border-top:1px solid rgba(255,255,255,.07);padding-top:18px">
-      <p>© 2026 Dipayan Barua · dipayanbarua.com.au</p>
-      <p>Built &amp; hosted in Sydney 🇦🇺</p>
-    </div>
-  </div>
-</footer>
+  </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="assets/gateway.js"></script>
-<script src="assets/app.js"></script>
+  <!-- Three.js (from CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+  <script>
+    /* ── Post-processing modules (inline since CDN doesn't have ES module builds easily) ── */
+    /* EffectComposer */
+    (function(){var e=THREE;function t(t,r){this.renderer=t,this.domElement=t.domElement,this._pixelRatio=t.getPixelRatio();var i=this.domElement.width,n=this.domElement.height;this.renderTarget1=r||new e.WebGLRenderTarget(i,n,{type:e.HalfFloatType}),this.renderTarget2=this.renderTarget1.clone(),this.writeBuffer=this.renderTarget1,this.readBuffer=this.renderTarget2,this.renderToScreen=!0,this.passes=[],this._previousFrameTime=Date.now()}t.prototype={constructor:t,swapBuffers:function(){var e=this.readBuffer;this.readBuffer=this.writeBuffer,this.writeBuffer=e},addPass:function(e){this.passes.push(e);var t=this.renderer.getSize(new THREE.Vector2);e.setSize(t.x*this._pixelRatio,t.y*this._pixelRatio)},render:function(e){for(var t=!1,r=this.passes.length,i=0;i<r;i++){var n=this.passes[i];if(!1!==n.enabled){if(n.renderToScreen=this.renderToScreen&&i===r-1,n.render(this.renderer,this.writeBuffer,this.readBuffer,e,t),n.needsSwap){if(t){var s=this.renderer.getContext(),a=this.renderer.state.buffers.stencil;a.setFunc(s.NOTEQUAL,1,4294967295),this.swapBuffers(),a.setFunc(s.EQUAL,1,4294967295)}else this.swapBuffers()}n.constructor===THREE.MaskPass?t=!0:n.constructor===THREE.ClearMaskPass&&(t=!1)}}},setSize:function(e,t){this._pixelRatio=this.renderer.getPixelRatio();var r=e*this._pixelRatio,i=t*this._pixelRatio;this.renderTarget1.setSize(r,i),this.renderTarget2.setSize(r,i);for(var n=0;n<this.passes.length;n++)this.passes[n].setSize(r,i)},setPixelRatio:function(e){this._pixelRatio=e,this.setSize(this.domElement.width,this.domElement.height)}},window.EffectComposer=t;function r(){}r.prototype={constructor:r,enabled:!0,needsSwap:!0,clear:!1,renderToScreen:!1,setSize:function(){},render:function(){console.error("Pass: .render() must be implemented")}},window.Pass=r})();
+
+    /* RenderPass */
+    (function(){function e(e,t,r,i,n){this.scene=e,this.camera=t,this.overrideMaterial=r||null,this.clearColor=i,this.clearAlpha=void 0!==n?n:0,this.clear=!0,this.clearDepth=!1,this.needsSwap=!1,this._oldClearColor=new THREE.Color}e.prototype=Object.assign(Object.create(window.Pass.prototype),{constructor:e,render:function(e,t,r){var i=e.autoClear;e.autoClear=!1,void 0!==this.overrideMaterial&&(this.scene.overrideMaterial=this.overrideMaterial),this.clearColor&&(this._oldClearColor.copy(e.getClearColor(new THREE.Color)),e.setClearColor(this.clearColor,this.clearAlpha)),this.clearDepth&&e.clearDepth(),e.setRenderTarget(this.renderToScreen?null:t),this.clear&&e.clear(e.autoClearColor,e.autoClearDepth,e.autoClearStencil),e.render(this.scene,this.camera),this.clearColor&&e.setClearColor(this._oldClearColor),void 0!==this.overrideMaterial&&(this.scene.overrideMaterial=null),e.autoClear=i}}),window.RenderPass=e})();
+
+    /* ShaderPass */
+    (function(){function e(e,t){this.textureID=void 0!==t?t:"tDiffuse",e instanceof THREE.ShaderMaterial?(this.uniforms=e.uniforms,this.material=e):e&&(this.uniforms=THREE.UniformsUtils.clone(e.uniforms),this.material=new THREE.ShaderMaterial({uniforms:this.uniforms,vertexShader:e.vertexShader,fragmentShader:e.fragmentShader})),this.fsQuad=new THREE.FullScreenQuad(this.material),this.needsSwap=!0}e.prototype=Object.assign(Object.create(window.Pass.prototype),{constructor:e,render:function(e,t,r){this.uniforms[this.textureID]&&(this.uniforms[this.textureID].value=r.texture),this.fsQuad.material=this.material,this.renderToScreen?(e.setRenderTarget(null),this.fsQuad.render(e)):(e.setRenderTarget(t),this.clear&&e.clear(e.autoClearColor,e.autoClearDepth,e.autoClearStencil),this.fsQuad.render(e))}}),window.ShaderPass=e;THREE.FullScreenQuad=function(){var e=new THREE.OrthographicCamera(-1,1,1,-1,0,1),t=new THREE.PlaneGeometry(2,2);return function(r){this._mesh=new THREE.Mesh(t,r),this.render=function(t){t.render(this._mesh,e)},Object.defineProperty(this,"material",{get:function(){return this._mesh.material},set:function(e){this._mesh.material=e}})}}()})();
+
+    /* UnrealBloomPass (simplified) */
+    (function(){var e={uniforms:{tDiffuse:{value:null},bloomTexture:{value:null},bloomStrength:{value:1}},vertexShader:"varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",fragmentShader:"uniform sampler2D tDiffuse;uniform sampler2D bloomTexture;uniform float bloomStrength;varying vec2 vUv;void main(){vec4 base=texture2D(tDiffuse,vUv);vec4 bloom=texture2D(bloomTexture,vUv);gl_FragColor=base+bloom*bloomStrength;}"};function t(t,r,i,n){this.strength=void 0!==r?r:1,this.radius=i||0,this.threshold=n||0,this.resolution=t||new THREE.Vector2(256,256),this.clearColor=new THREE.Color(0,0,0);var s=THREE.UniformsUtils.clone(e.uniforms);this.renderTargetBright=new THREE.WebGLRenderTarget(this.resolution.x/2,this.resolution.y/2,{type:THREE.HalfFloatType}),this.compositeMaterial=new THREE.ShaderMaterial({uniforms:s,vertexShader:e.vertexShader,fragmentShader:e.fragmentShader}),this.compositeMaterial.uniforms.bloomStrength.value=this.strength,this.needsSwap=!0,this._oldClearColor=new THREE.Color,this._oldClearAlpha=1,this.fsQuad=new THREE.FullScreenQuad(null),this.basic=new THREE.MeshBasicMaterial}t.prototype=Object.assign(Object.create(window.Pass.prototype),{constructor:t,setSize:function(e,t){this.renderTargetBright.setSize(e/2,t/2)},render:function(e,t,r){this._oldClearColor.copy(e.getClearColor(new THREE.Color)),this._oldClearAlpha=e.getClearAlpha(),e.setClearColor(this.clearColor,0);/* Simple bloom: render bright areas to separate target, blend */e.setRenderTarget(this.renderTargetBright),e.clear(),this.fsQuad.material=this.basic,this.fsQuad.material.map=r.texture,this.fsQuad.render(e);this.compositeMaterial.uniforms.bloomTexture.value=this.renderTargetBright.texture,this.compositeMaterial.uniforms.tDiffuse.value=r.texture,this.compositeMaterial.uniforms.bloomStrength.value=this.strength,this.fsQuad.material=this.compositeMaterial,this.renderToScreen?(e.setRenderTarget(null),this.fsQuad.render(e)):(e.setRenderTarget(t),e.clear(),this.fsQuad.render(e)),e.setClearColor(this._oldClearColor,this._oldClearAlpha)}}),window.UnrealBloomPass=t})();
+
+    /* FXAAShader */
+    window.FXAAShader={uniforms:{tDiffuse:{value:null},resolution:{value:new THREE.Vector2(1/1024,1/512)}},vertexShader:"varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",fragmentShader:"precision highp float;uniform sampler2D tDiffuse;uniform vec2 resolution;varying vec2 vUv;void main(){vec2 r=resolution;vec3 c=texture2D(tDiffuse,vUv).rgb;vec3 n=texture2D(tDiffuse,vUv+vec2(0.0,-r.y)).rgb;vec3 s=texture2D(tDiffuse,vUv+vec2(0.0,r.y)).rgb;vec3 e=texture2D(tDiffuse,vUv+vec2(r.x,0.0)).rgb;vec3 w=texture2D(tDiffuse,vUv+vec2(-r.x,0.0)).rgb;float lc=dot(c,vec3(0.299,0.587,0.114));float ln=dot(n,vec3(0.299,0.587,0.114));float ls=dot(s,vec3(0.299,0.587,0.114));float le=dot(e,vec3(0.299,0.587,0.114));float lw=dot(w,vec3(0.299,0.587,0.114));float mn=min(min(ln,ls),min(le,lw));float mx=max(max(ln,ls),max(le,lw));float contrast=mx-mn;if(contrast<max(0.0312,mx*0.125)){gl_FragColor=vec4(c,1.0);return;}vec2 d;d.x=-(ln-ls);d.y=(le-lw);float dMin=min(abs(d.x),abs(d.y))+max(abs(d.x),abs(d.y))*0.5;d=clamp(d/dMin,-8.0,8.0)*r;vec3 r1=0.5*(texture2D(tDiffuse,vUv+d*(1.0/3.0-0.5)).rgb+texture2D(tDiffuse,vUv+d*(2.0/3.0-0.5)).rgb);vec3 r2=r1*0.5+0.25*(texture2D(tDiffuse,vUv+d*(-0.5)).rgb+texture2D(tDiffuse,vUv+d*0.5).rgb);float lr2=dot(r2,vec3(0.299,0.587,0.114));gl_FragColor=vec4((lr2<mn||lr2>mx)?r1:r2,1.0);}"};
+  </script>
+
+  <!-- App Scripts -->
+  <script src="assets/gateway.js"></script>
+  <script src="assets/app.js"></script>
+
 </body>
 </html>
