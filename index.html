@@ -6,29 +6,185 @@
   <meta name="description" content="A Microsoft cloud learning hub with interactive 3D diagrams, hands-on how-tos, and career-mapped content across Azure, Entra ID, Intune, Defender, and 51 technical clusters.">
   <meta name="author" content="Dipayan Barua">
   <meta name="theme-color" content="#060810">
-
-  <!-- Open Graph -->
-  <meta property="og:title" content="Dipayan Barua — Microsoft Cloud Learning Hub">
-  <meta property="og:description" content="10 domains, 51 clusters, 600+ 3D diagrams. Learn Azure, Entra ID, Intune, Defender, DevOps, and more with interactive visualisations and real-world scenarios.">
+  <meta property="og:title" content="The Microsoft Cloud Stack — Interactive Learning Hub">
+  <meta property="og:description" content="10 domains, 51 clusters. Learn Azure with interactive 3D diagrams, click-by-click how-tos, and real-world scenarios mapped to 16 career paths.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://dipayanbarua.com.au">
-
-  <title>Dipayan Barua — Microsoft Cloud Learning Hub</title>
-
-  <!-- Fonts -->
+  <title>The Microsoft Cloud Stack — Interactive Learning Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <!-- Styles -->
   <link rel="stylesheet" href="assets/styles.css">
+
+  <style>
+    /* ─── HERO OVERLAY ────────────────────────────────────────── */
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      pointer-events: none;
+      padding-top: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .hero-overlay > * { pointer-events: auto; }
+
+    .hero-tagline {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: var(--space-md);
+      text-shadow: 0 2px 40px rgba(0,0,0,0.5);
+    }
+    .hero-tagline .highlight {
+      background: linear-gradient(135deg, var(--accent), rgba(125,171,255,0.6));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.0625rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: var(--space-xl);
+      text-shadow: 0 1px 20px rgba(0,0,0,0.4);
+    }
+
+    /* ─── HERO SEARCH BAR ─────────────────────────────────────── */
+    .hero-search {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-glass);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 0.5px solid var(--accent-border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      cursor: text;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-base);
+      margin-bottom: var(--space-2xl);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 60px rgba(125,171,255,0.04);
+    }
+    .hero-search:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 80px rgba(125,171,255,0.06);
+    }
+    .hero-search-icon { color: var(--accent); font-size: 1.125rem; flex-shrink: 0; }
+    .hero-search-text { color: var(--text-muted); font-size: 0.9375rem; flex: 1; }
+    .hero-search-kbd {
+      font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim);
+      background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 4px;
+      border: 0.5px solid var(--border-subtle);
+    }
+
+    /* ─── ROLE SELECTOR ───────────────────────────────────────── */
+    .role-selector {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      max-width: 680px;
+    }
+
+    .role-pill {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border);
+      background: rgba(10,14,24,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+    .role-pill:hover {
+      color: var(--text-bright);
+      border-color: var(--border-hover);
+      background: var(--accent-subtle);
+    }
+    .role-pill.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .role-label {
+      font-size: 0.6875rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    /* ─── FULL-PAGE CANVAS ────────────────────────────────────── */
+    .gateway {
+      position: relative;
+      min-height: 100vh;
+    }
+    .gateway-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .gateway-canvas canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* ─── SCROLL HINT ─────────────────────────────────────────── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+      font-size: 0.6875rem;
+      letter-spacing: 1px;
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    .scroll-hint-line {
+      width: 1px;
+      height: 24px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 0.8; transform: translateX(-50%) translateY(4px); }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero-tagline { font-size: 2rem; }
+      .hero-search { max-width: 340px; padding: 12px 16px; }
+      .role-selector { max-width: 360px; }
+      .role-pill { font-size: 0.6875rem; padding: 5px 10px; }
+    }
+  </style>
 </head>
 <body>
 
   <!-- Cursor Glow -->
   <div class="cursor-glow" aria-hidden="true"></div>
 
-  <!-- Navigation -->
+  <!-- Navigation — Minimal -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo" aria-label="Home">
@@ -37,17 +193,12 @@
       </a>
 
       <div class="nav-links" role="menubar">
-        <a href="/0-stack-floor/" class="nav-link" role="menuitem">Stack Floor</a>
-        <a href="/1-compute/" class="nav-link" role="menuitem">Compute</a>
-        <a href="/2-storage/" class="nav-link" role="menuitem">Storage</a>
-        <a href="/3-networking/" class="nav-link" role="menuitem">Networking</a>
-        <a href="/4-identity-security/" class="nav-link" role="menuitem">Identity</a>
-        <a href="/5-operations/" class="nav-link" role="menuitem">Operations</a>
-        <a href="/6-iac-devops/" class="nav-link" role="menuitem">DevOps</a>
-        <a href="/7-resilience/" class="nav-link" role="menuitem">Resilience</a>
-        <a href="/8-hybrid-workplace/" class="nav-link" role="menuitem">Workplace</a>
-        <a href="/9-ai-iot/" class="nav-link" role="menuitem">AI & IoT</a>
+        <a href="#explore" class="nav-link active" role="menuitem">Explore</a>
+        <a href="#careers" class="nav-link" role="menuitem">Careers</a>
+        <a href="about.html" class="nav-link" role="menuitem">About</a>
       </div>
+
+      <div class="nav-spacer" style="flex:1;"></div>
 
       <div class="nav-search" role="button" tabindex="0" aria-label="Search (⌘K)">
         <span class="nav-search-text">Search</span>
@@ -74,51 +225,47 @@
     </div>
   </div>
 
-  <!-- ═══ THE GATEWAY ═══ -->
+  <!-- ═══ THE GATEWAY — HERO ═══ -->
   <header class="gateway">
     <div id="gateway-canvas" class="gateway-canvas" aria-hidden="true"></div>
 
-    <div class="gateway-content">
-      <div class="gateway-text">
-        <p class="eyebrow">Microsoft Cloud Learning Hub</p>
-        <h1>Learn the cloud<br>by <span class="highlight">building</span> it.</h1>
-        <p class="subtitle">
-          10 domains. 51 clusters. 600+ interactive 3D diagrams.
-          From foundational networking to Azure AI — theory, architecture,
-          click-by-click how-tos, and real-world scenarios mapped to
-          15 career paths.
-        </p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="#explore" class="btn btn-primary">Explore the stack</a>
-          <a href="about.html" class="btn btn-ghost">About this project</a>
-        </div>
+    <div class="hero-overlay">
+      <h1 class="hero-tagline">Learn the cloud<br>by <span class="highlight">building</span> it.</h1>
+      <p class="hero-sub">From foundational networking to Azure AI — theory, architecture, click-by-click how-tos, and real-world scenarios. Click any layer to begin.</p>
+
+      <!-- Search Bar -->
+      <div class="hero-search" role="button" tabindex="0" aria-label="Search" onclick="document.querySelector('.nav-search').click()">
+        <span class="hero-search-icon">⌕</span>
+        <span class="hero-search-text">What do you want to learn?</span>
+        <span class="hero-search-kbd">⌘K</span>
       </div>
 
-      <div class="gateway-profile">
-        <div class="profile-card">
-          <div class="avatar">DB</div>
-          <div class="name">Dipayan Barua</div>
-          <div class="role">Systems Engineer · Entra ID · Intune · Azure</div>
-          <div class="stats">
-            <div class="stat">
-              <div class="stat-value">10</div>
-              <div class="stat-label">Domains</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value">51</div>
-              <div class="stat-label">Clusters</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value">600+</div>
-              <div class="stat-label">3D Diagrams</div>
-            </div>
-            <div class="stat">
-              <div class="stat-value">15</div>
-              <div class="stat-label">Career Paths</div>
-            </div>
-          </div>
-        </div>
+      <!-- Role Selector -->
+      <p class="role-label">I want to become a...</p>
+      <div class="role-selector">
+        <span class="role-pill" data-role="cloud-engineer">Cloud Engineer</span>
+        <span class="role-pill" data-role="cloud-infra">Cloud Infrastructure Engineer</span>
+        <span class="role-pill" data-role="solutions-architect">Solutions Architect</span>
+        <span class="role-pill" data-role="devops-engineer">DevOps Engineer</span>
+        <span class="role-pill" data-role="security-engineer">Security Engineer</span>
+        <span class="role-pill" data-role="sre">SRE</span>
+        <span class="role-pill" data-role="iam-engineer">IAM Engineer</span>
+        <span class="role-pill" data-role="network-engineer">Network Engineer</span>
+        <span class="role-pill" data-role="endpoint-engineer">Endpoint Engineer</span>
+        <span class="role-pill" data-role="systems-admin">Systems Admin</span>
+        <span class="role-pill" data-role="it-support">IT Support</span>
+        <span class="role-pill" data-role="data-engineer">Data Engineer</span>
+        <span class="role-pill" data-role="ai-ml-engineer">AI / ML Engineer</span>
+        <span class="role-pill" data-role="dba">DBA</span>
+        <span class="role-pill" data-role="governance">Governance</span>
+        <span class="role-pill" data-role="backup-dr">Backup & DR</span>
       </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      <span>SCROLL</span>
     </div>
   </header>
 
@@ -127,183 +274,46 @@
     <div class="section-header">
       <p class="eyebrow">10 Domains</p>
       <h2>Explore the stack</h2>
-      <p class="lead">Every layer of the Microsoft cloud — from physical infrastructure to AI. Each domain contains clusters of hands-on content with 3D diagrams, how-to guides, and career mapping.</p>
+      <p class="lead">Every layer of the Microsoft cloud. Each domain contains clusters of hands-on content with 3D diagrams, how-to guides, and career mapping.</p>
     </div>
-
     <div class="domain-grid">
-
-      <a href="/0-stack-floor/" class="domain-card reveal" style="--card-accent: #A0AEC0;">
-        <span class="card-number">00</span>
-        <h3 class="card-title">The Stack Floor</h3>
-        <p class="card-desc">IT fundamentals, networking, virtualisation, and scripting. The foundation everything else builds on.</p>
-        <div class="card-meta">
-          <span class="card-badge">11 clusters</span>
-          <span>Physical · Foundation</span>
-        </div>
-      </a>
-
-      <a href="/1-compute/" class="domain-card reveal" style="--card-accent: #FF6B00;">
-        <span class="card-number">01</span>
-        <h3 class="card-title">Compute & Application Platform</h3>
-        <p class="card-desc">Virtual machines, serverless functions, containers, Kubernetes, and scalability patterns.</p>
-        <div class="card-meta">
-          <span class="card-badge">5 clusters</span>
-          <span>IaaS · PaaS</span>
-        </div>
-      </a>
-
-      <a href="/2-storage/" class="domain-card reveal" style="--card-accent: #00FFD1;">
-        <span class="card-number">02</span>
-        <h3 class="card-title">Storage & Data</h3>
-        <p class="card-desc">Blob, disk, and file storage. Azure SQL, Cosmos DB, Synapse Analytics, and data pipelines.</p>
-        <div class="card-meta">
-          <span class="card-badge">5 clusters</span>
-          <span>IaaS · PaaS</span>
-        </div>
-      </a>
-
-      <a href="/3-networking/" class="domain-card reveal" style="--card-accent: #00E5FF;">
-        <span class="card-number">03</span>
-        <h3 class="card-title">Networking</h3>
-        <p class="card-desc">VNets, VPN Gateway, ExpressRoute, load balancers, firewalls, CDN, and global Azure regions.</p>
-        <div class="card-meta">
-          <span class="card-badge">5 clusters</span>
-          <span>IaaS</span>
-        </div>
-      </a>
-
-      <a href="/4-identity-security/" class="domain-card reveal" style="--card-accent: #4D7DFF;">
-        <span class="card-number">04</span>
-        <h3 class="card-title">Identity & Security</h3>
-        <p class="card-desc">Entra ID, RBAC, Conditional Access, Key Vault, Microsoft Defender, Purview, and compliance.</p>
-        <div class="card-meta">
-          <span class="card-badge">6 clusters</span>
-          <span>Cloud Management</span>
-        </div>
-      </a>
-
-      <a href="/5-operations/" class="domain-card reveal" style="--card-accent: #00FF88;">
-        <span class="card-number">05</span>
-        <h3 class="card-title">Operations & Management</h3>
-        <p class="card-desc">Azure Monitor, Log Analytics, governance, policy, cost management, and patch management.</p>
-        <div class="card-meta">
-          <span class="card-badge">5 clusters</span>
-          <span>Cloud Management</span>
-        </div>
-      </a>
-
-      <a href="/6-iac-devops/" class="domain-card reveal" style="--card-accent: #BF5AF2;">
-        <span class="card-number">06</span>
-        <h3 class="card-title">Infrastructure as Code & DevOps</h3>
-        <p class="card-desc">Bicep, Terraform, Azure Automation, CI/CD pipelines, GitHub Actions, and source control.</p>
-        <div class="card-meta">
-          <span class="card-badge">5 clusters</span>
-          <span>PaaS</span>
-        </div>
-      </a>
-
-      <a href="/7-resilience/" class="domain-card reveal" style="--card-accent: #FF3B3B;">
-        <span class="card-number">07</span>
-        <h3 class="card-title">Resilience & Continuity</h3>
-        <p class="card-desc">Azure Backup, Site Recovery, high availability, availability zones, and BCDR planning.</p>
-        <div class="card-meta">
-          <span class="card-badge">4 clusters</span>
-          <span>IaaS</span>
-        </div>
-      </a>
-
-      <a href="/8-hybrid-workplace/" class="domain-card reveal" style="--card-accent: #FF2D78;">
-        <span class="card-number">08</span>
-        <h3 class="card-title">Hybrid, Endpoint & Workplace</h3>
-        <p class="card-desc">Windows Server, Linux on Azure, Azure Arc, Intune, M365 Admin, SharePoint, and OneDrive.</p>
-        <div class="card-meta">
-          <span class="card-badge">6 clusters</span>
-          <span>SaaS · Cloud Management</span>
-        </div>
-      </a>
-
-      <a href="/9-ai-iot/" class="domain-card reveal" style="--card-accent: #FFD60A;">
-        <span class="card-number">09</span>
-        <h3 class="card-title">AI, Data & IoT</h3>
-        <p class="card-desc">Azure Machine Learning, OpenAI Service, Cognitive AI Services, IoT Hub, and Digital Twins.</p>
-        <div class="card-meta">
-          <span class="card-badge">4 clusters</span>
-          <span>PaaS</span>
-        </div>
-      </a>
-
+      <a href="/0-stack-floor/" class="domain-card reveal" style="--card-accent:#A0AEC0;"><span class="card-number">00</span><h3 class="card-title">The Stack Floor</h3><p class="card-desc">IT fundamentals, networking, virtualisation, and scripting. The foundation everything else builds on.</p><div class="card-meta"><span class="card-badge">11 clusters</span><span>Physical</span></div></a>
+      <a href="/1-compute/" class="domain-card reveal" style="--card-accent:#FF6B00;"><span class="card-number">01</span><h3 class="card-title">Compute & Application Platform</h3><p class="card-desc">Virtual machines, serverless functions, containers, Kubernetes, and scalability patterns.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>IaaS · PaaS</span></div></a>
+      <a href="/2-storage/" class="domain-card reveal" style="--card-accent:#00FFD1;"><span class="card-number">02</span><h3 class="card-title">Storage & Data</h3><p class="card-desc">Blob, disk, and file storage. Azure SQL, Cosmos DB, Synapse Analytics, and data pipelines.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>IaaS · PaaS</span></div></a>
+      <a href="/3-networking/" class="domain-card reveal" style="--card-accent:#00E5FF;"><span class="card-number">03</span><h3 class="card-title">Networking</h3><p class="card-desc">VNets, VPN Gateway, ExpressRoute, load balancers, firewalls, CDN, and global Azure regions.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>IaaS</span></div></a>
+      <a href="/4-identity-security/" class="domain-card reveal" style="--card-accent:#4D7DFF;"><span class="card-number">04</span><h3 class="card-title">Identity & Security</h3><p class="card-desc">Entra ID, RBAC, Conditional Access, Key Vault, Microsoft Defender, Purview, and compliance.</p><div class="card-meta"><span class="card-badge">6 clusters</span><span>Cloud Management</span></div></a>
+      <a href="/5-operations/" class="domain-card reveal" style="--card-accent:#00FF88;"><span class="card-number">05</span><h3 class="card-title">Operations & Management</h3><p class="card-desc">Azure Monitor, Log Analytics, governance, policy, cost management, and patch management.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>Cloud Management</span></div></a>
+      <a href="/6-iac-devops/" class="domain-card reveal" style="--card-accent:#BF5AF2;"><span class="card-number">06</span><h3 class="card-title">Infrastructure as Code & DevOps</h3><p class="card-desc">Bicep, Terraform, Azure Automation, CI/CD pipelines, GitHub Actions, and source control.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>PaaS</span></div></a>
+      <a href="/7-resilience/" class="domain-card reveal" style="--card-accent:#FF3B3B;"><span class="card-number">07</span><h3 class="card-title">Resilience & Continuity</h3><p class="card-desc">Azure Backup, Site Recovery, high availability, availability zones, and BCDR planning.</p><div class="card-meta"><span class="card-badge">4 clusters</span><span>IaaS</span></div></a>
+      <a href="/8-hybrid-workplace/" class="domain-card reveal" style="--card-accent:#FF2D78;"><span class="card-number">08</span><h3 class="card-title">Hybrid, Endpoint & Workplace</h3><p class="card-desc">Windows Server, Linux on Azure, Azure Arc, Intune, M365 Admin, SharePoint, and OneDrive.</p><div class="card-meta"><span class="card-badge">6 clusters</span><span>SaaS · Cloud Management</span></div></a>
+      <a href="/9-ai-iot/" class="domain-card reveal" style="--card-accent:#FFD60A;"><span class="card-number">09</span><h3 class="card-title">AI, Data & IoT</h3><p class="card-desc">Azure Machine Learning, OpenAI Service, Cognitive AI Services, IoT Hub, and Digital Twins.</p><div class="card-meta"><span class="card-badge">4 clusters</span><span>PaaS</span></div></a>
     </div>
   </section>
 
-  <!-- ═══ CAREER PATHS TEASER ═══ -->
-  <section class="section">
+  <!-- ═══ CAREER PATHS ═══ -->
+  <section id="careers" class="section">
     <div class="section-header">
-      <p class="eyebrow">Career Mapping</p>
+      <p class="eyebrow">Career mapping</p>
       <h2>Every cluster leads somewhere</h2>
-      <p class="lead">15 real-world job roles mapped to the exact clusters you need to study. Pick a role, see your learning path.</p>
+      <p class="lead">16 real-world job roles mapped to the exact clusters you need to study. Pick a role, see your learning path.</p>
     </div>
-
     <div class="domain-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-      <div class="cluster-card reveal">
-        <span class="cluster-id">17 clusters</span>
-        <span class="cluster-title">Azure Cloud Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">18 clusters</span>
-        <span class="cluster-title">Solutions Architect</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">12 clusters</span>
-        <span class="cluster-title">DevOps Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">8 clusters</span>
-        <span class="cluster-title">Security Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">12 clusters</span>
-        <span class="cluster-title">Site Reliability Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">5 clusters</span>
-        <span class="cluster-title">IAM / Identity Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">8 clusters</span>
-        <span class="cluster-title">Network Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">7 clusters</span>
-        <span class="cluster-title">Endpoint Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">13 clusters</span>
-        <span class="cluster-title">Systems Administrator</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">3 clusters</span>
-        <span class="cluster-title">IT Support Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">6 clusters</span>
-        <span class="cluster-title">Data Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">4 clusters</span>
-        <span class="cluster-title">AI / ML Engineer</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">3 clusters</span>
-        <span class="cluster-title">Database Administrator</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">7 clusters</span>
-        <span class="cluster-title">Cloud Governance Specialist</span>
-      </div>
-      <div class="cluster-card reveal">
-        <span class="cluster-id">4 clusters</span>
-        <span class="cluster-title">Backup & DR Specialist</span>
-      </div>
+      <div class="cluster-card reveal"><span class="cluster-id">17 clusters</span><span class="cluster-title">Azure Cloud Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">13 clusters</span><span class="cluster-title">Cloud Infrastructure Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">18 clusters</span><span class="cluster-title">Solutions Architect</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">12 clusters</span><span class="cluster-title">DevOps Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">8 clusters</span><span class="cluster-title">Security Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">12 clusters</span><span class="cluster-title">Site Reliability Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">5 clusters</span><span class="cluster-title">IAM / Identity Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">8 clusters</span><span class="cluster-title">Network Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">7 clusters</span><span class="cluster-title">Endpoint Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">13 clusters</span><span class="cluster-title">Systems Administrator</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">3 clusters</span><span class="cluster-title">IT Support Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">6 clusters</span><span class="cluster-title">Data Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">4 clusters</span><span class="cluster-title">AI / ML Engineer</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">3 clusters</span><span class="cluster-title">Database Administrator</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">7 clusters</span><span class="cluster-title">Cloud Governance Specialist</span></div>
+      <div class="cluster-card reveal"><span class="cluster-id">4 clusters</span><span class="cluster-title">Backup & DR Specialist</span></div>
     </div>
   </section>
 
@@ -314,15 +324,9 @@
       <h2 style="margin-top: 8px;">Built by Dipayan Barua</h2>
       <p style="color: var(--text-secondary); margin-top: 8px;">Systems Engineer based in Sydney, Australia. Building this platform as a comprehensive Microsoft cloud learning resource.</p>
       <div class="contact-links">
-        <a href="https://linkedin.com/in/dipayanbarua" class="contact-link" target="_blank" rel="noopener">
-          <span>LinkedIn</span>
-        </a>
-        <a href="mailto:hello@dipayanbarua.com.au" class="contact-link">
-          <span>Email</span>
-        </a>
-        <a href="https://github.com/Dipayan380" class="contact-link" target="_blank" rel="noopener">
-          <span>GitHub</span>
-        </a>
+        <a href="https://linkedin.com/in/dipayanbarua" class="contact-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:dipayan@dipayanbarua.com.au" class="contact-link">Email</a>
+        <a href="https://github.com/Dipayan380" class="contact-link" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </section>
@@ -337,12 +341,38 @@
     </div>
   </footer>
 
-  <!-- Three.js -->
+  <!-- Three.js + OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <!-- App Scripts -->
   <script src="assets/gateway.js"></script>
   <script src="assets/app.js"></script>
+
+  <!-- Role Selector Logic -->
+  <script>
+    document.querySelectorAll('.role-pill').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        var role = pill.dataset.role;
+        var wasActive = pill.classList.contains('active');
+
+        document.querySelectorAll('.role-pill').forEach(function(p) { p.classList.remove('active'); });
+
+        if (!wasActive) {
+          pill.classList.add('active');
+        }
+
+        if (typeof window.setStackRole === 'function') {
+          window.setStackRole(wasActive ? null : role);
+        }
+      });
+    });
+
+    document.querySelector('.hero-search').addEventListener('click', function() {
+      var navSearch = document.querySelector('.nav-search');
+      if (navSearch) navSearch.click();
+    });
+  </script>
 
 </body>
 </html>
