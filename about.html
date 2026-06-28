@@ -1,67 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About — Dipayan Barua</title>
-<meta name="description" content="Systems Engineer Dipayan Barua — learning the Microsoft cloud in public from Sydney.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About the Microsoft Cloud Stack learning hub — built by Dipayan Barua, Systems Engineer based in Sydney, Australia.">
+  <meta name="theme-color" content="#060810">
+  <title>About — The Microsoft Cloud Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
 
-<div id="cursor-glow"></div>
-<header id="header">
-  <nav>
-    <a href="/" class="logo"><span class="logo-mark">DB</span><span>Dipayan Barua<small>LEARNING THE CLOUD</small></span></a>
-    <div class="nav-links"><a href="/#topics">Topics</a><a href="/#about">About</a><a href="/#contact">Contact</a></div>
-    <div class="nav-search" style="position:relative">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="navSearch" placeholder="Search topics..." aria-label="Search topics"><kbd>⌘K</kbd>
-      <div class="search-results" id="navResults"></div>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Home"><span class="monogram">DB</span><span>dipayanbarua</span></a>
+      <div class="nav-links" role="menubar">
+        <a href="/" class="nav-link" role="menuitem">Explore</a>
+        <a href="/#careers" class="nav-link" role="menuitem">Careers</a>
+        <a href="about.html" class="nav-link active" role="menuitem">About</a>
+      </div>
+      <div style="flex:1;"></div>
+      <div class="nav-search" role="button" tabindex="0" aria-label="Search"><span class="nav-search-text">Search</span><span class="nav-search-kbd">⌘K</span></div>
+      <button class="nav-mobile-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </div>
-    <div class="nav-right"><a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Connect →</a></div>
-    <button class="menu-toggle" id="menuToggle" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
   </nav>
-</header>
-<div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-close" id="mobileClose" aria-label="Close menu"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <a href="/#topics">Topics</a><a href="/#about">About</a><a href="/#contact">Contact</a>
-</div>
 
-<section class="sec" style="padding-top:calc(var(--nav-h) + 60px)">
-  <div class="wrap">
-    <div class="about-inner reveal">
-      <span class="eyebrow">About</span>
-      <h2>Hi, I'm Dipayan.</h2>
-      <p>I'm a Systems Engineer in Sydney, working across enterprise Microsoft environments every day. This site is where I learn out loud.</p>
-      <p>I've always thought the fastest way to truly understand something is to build it, break it, and then explain it simply. So that's what I do here — take one piece of the Microsoft cloud at a time and write it down clearly enough that it'd help the version of me from a week ago.</p>
-      <p>When I'm not in the terminal, you'll find me travelling or behind a camera.</p>
-      <div style="margin-top:32px">
-        <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" class="btn btn-primary">Connect on LinkedIn</a>
-        <a href="mailto:it.dipayan@gmail.com" class="btn btn-ghost" style="margin-left:12px">Email me</a>
-      </div>
+  <!-- Command Palette -->
+  <div class="cmd-overlay" role="dialog" aria-label="Search palette" aria-modal="true">
+    <div class="cmd-palette">
+      <div class="cmd-input-wrap"><span class="cmd-icon">⌕</span><input type="text" class="cmd-input" placeholder="Search domains, clusters, Azure services, certs..." aria-label="Search"></div>
+      <div class="cmd-results" role="listbox"></div>
+      <div class="cmd-footer"><span><kbd>↑↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
     </div>
   </div>
-</section>
 
-<footer>
-  <div class="wrap">
-    <div class="foot-row">
-      <a href="/" class="logo"><span class="logo-mark">DB</span><span>Dipayan Barua</span></a>
-      <div class="socials">
-        <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2zM8 19H5v-9h3zM6.5 8.3a1.8 1.8 0 1 1 0-3.5 1.8 1.8 0 0 1 0 3.5zM19 19h-3v-4.7c0-1.1 0-2.6-1.6-2.6S12.6 13 12.6 14.2V19h-3v-9h2.9v1.2h.05a3.2 3.2 0 0 1 2.9-1.6c3 0 3.6 2 3.6 4.6z"/></svg></a>
-        <a href="mailto:it.dipayan@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.5V18h16V7.5l-8 5z"/></svg></a>
-      </div>
-    </div>
-    <div class="foot-row" style="margin-top:20px;border-top:1px solid rgba(255,255,255,.07);padding-top:18px">
-      <p>&copy; 2026 Dipayan Barua &middot; dipayanbarua.com.au</p>
-      <p>Built &amp; hosted in Sydney 🇦🇺</p>
+  <!-- About Content -->
+  <div class="about-content">
+    <p class="eyebrow">About this project</p>
+    <h1>The Microsoft Cloud Stack</h1>
+
+    <p>This platform is a comprehensive, interactive learning hub for the Microsoft cloud ecosystem — covering everything from foundational IT concepts to advanced Azure architecture, security, DevOps, and AI.</p>
+
+    <p>It's structured around <strong>10 domains</strong> and <strong>51 clusters</strong>, spanning the full depth of Microsoft cloud technologies. Every cluster contains theory, 3D architectural diagrams, step-by-step how-to guides with portal walkthroughs and PowerShell commands, real-world scenarios, and troubleshooting notes.</p>
+
+    <h2>Why this exists</h2>
+
+    <p>Microsoft Learn is comprehensive but flat. YouTube tutorials are scattered and outdated. Certification study guides cover exam objectives but not real-world implementation. There's no single place where you can understand a concept, see how it connects to the broader architecture, practice deploying it, and know exactly which career path it leads to.</p>
+
+    <p>This platform bridges that gap. Every topic connects to the bigger picture through interactive 3D diagrams. Every how-to guide is written from practitioner experience. Every cluster is mapped to real-world job roles so you always know why you're learning what you're learning.</p>
+
+    <h2>How it's organised</h2>
+
+    <p>The platform uses a three-tier structure: <strong>Domains</strong> (10 major areas like Compute, Networking, Identity & Security), <strong>Clusters</strong> (51 focused topic groups within those domains), and <strong>Topics</strong> (individual concepts and services within each cluster).</p>
+
+    <p>Content is also layered with two additional lenses. The <strong>service model layer</strong> maps clusters to IaaS, PaaS, SaaS, and Cloud Management categories. The <strong>career mapping</strong> connects clusters to 16 real-world job roles — from IT Support Engineer to Azure Solutions Architect.</p>
+
+    <h2>The technology</h2>
+
+    <p>The platform is built as a static site hosted on GitHub Pages with a custom domain. The 3D visualisations use Three.js with custom shaders, emissive materials, and OrbitControls. The diagram engine renders workflow, architecture, role-based, and feature diagrams from JSON data. The command palette provides fuzzy search across all 51 clusters and 200+ topics.</p>
+
+    <p>The visual design follows a deep-space glassmorphic aesthetic with Phantom Blue (#7DABFF) as the signature accent colour, backdrop-filter blur on all surfaces, and a persistent particle field that extends across every page.</p>
+
+    <h2>Built by</h2>
+
+    <p><strong>Dipayan Barua</strong> — Systems Engineer based in Sydney, Australia. Currently working on enterprise endpoint management across Windows and macOS at scale. Background in Microsoft Entra ID, Intune, Azure infrastructure, ServiceNow, and identity security. Two IEEE publications in machine learning.</p>
+
+    <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+      <a href="https://linkedin.com/in/dipayanbarua" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="mailto:dipayan@dipayanbarua.com.au" class="btn btn-ghost">Email</a>
+      <a href="https://github.com/Dipayan380" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
+      <a href="/" class="btn btn-primary">Explore the stack</a>
     </div>
   </div>
-</footer>
-<script src="assets/app.js"></script>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>&copy; 2026 Dipayan Barua. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/Dipayan380" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+  <script src="assets/app.js"></script>
 </body>
 </html>

@@ -17,46 +17,70 @@
   <link rel="stylesheet" href="assets/styles.css">
 
   <style>
-    /* ─── HERO OVERLAY ────────────────────────────────────────── */
+    /* ─── HERO TOP (tagline only, stays above the stack) ─────── */
     .hero-overlay {
       position: absolute;
       top: 0; left: 0; right: 0;
       z-index: 10;
       pointer-events: none;
-      padding-top: 100px;
+      padding: 80px 24px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
     }
+    .hero-overlay::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 260px;
+      background: linear-gradient(to bottom, rgba(6,8,16,1) 0%, rgba(6,8,16,0.85) 40%, rgba(6,8,16,0.3) 75%, transparent 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
     .hero-overlay > * { pointer-events: auto; }
 
     .hero-tagline {
-      font-size: 3rem;
+      font-size: 2.75rem;
       font-weight: 700;
-      color: var(--text-bright);
+      color: #7DABFF;
       letter-spacing: -0.03em;
       line-height: 1.15;
-      margin-bottom: var(--space-md);
-      text-shadow: 0 2px 40px rgba(0,0,0,0.5);
-    }
-    .hero-tagline .highlight {
-      background: linear-gradient(135deg, var(--accent), rgba(125,171,255,0.6));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin-bottom: var(--space-sm);
+      text-shadow: 0 4px 40px rgba(125,171,255,0.3), 0 2px 20px rgba(0,0,0,0.5);
     }
 
     .hero-sub {
-      font-size: 1.0625rem;
+      font-size: 0.9375rem;
       color: var(--text-secondary);
-      max-width: 520px;
-      line-height: 1.7;
-      margin-bottom: var(--space-xl);
-      text-shadow: 0 1px 20px rgba(0,0,0,0.4);
+      max-width: 480px;
+      line-height: 1.65;
+      margin-bottom: var(--space-md);
+      text-shadow: 0 1px 20px rgba(0,0,0,0.5);
     }
 
-    /* ─── HERO SEARCH BAR ─────────────────────────────────────── */
+    /* ─── HERO BOTTOM OVERLAY ─────────────────────────────────── */
+    .hero-bottom {
+      position: absolute;
+      bottom: 40px;
+      left: 0; right: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      pointer-events: none;
+    }
+    .hero-bottom::before {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 0; right: 0;
+      height: 320px;
+      background: linear-gradient(to top, rgba(6,8,16,1) 0%, rgba(6,8,16,0.85) 35%, rgba(6,8,16,0.3) 70%, transparent 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .hero-bottom > * { pointer-events: auto; }
     .hero-search {
       width: 100%;
       max-width: 480px;
@@ -230,9 +254,11 @@
     <div id="gateway-canvas" class="gateway-canvas" aria-hidden="true"></div>
 
     <div class="hero-overlay">
-      <h1 class="hero-tagline">Learn the cloud<br>by <span class="highlight">building</span> it.</h1>
+      <h1 class="hero-tagline">Learn the cloud<br>by building it.</h1>
       <p class="hero-sub">From foundational networking to Azure AI — theory, architecture, click-by-click how-tos, and real-world scenarios. Click any layer to begin.</p>
+    </div>
 
+    <div class="hero-bottom">
       <!-- Search Bar -->
       <div class="hero-search" role="button" tabindex="0" aria-label="Search" onclick="document.querySelector('.nav-search').click()">
         <span class="hero-search-icon">⌕</span>
