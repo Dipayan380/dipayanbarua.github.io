@@ -23,7 +23,7 @@
       top: 0; left: 0; right: 0;
       z-index: 10;
       pointer-events: none;
-      padding: 80px 24px 0;
+      padding: 72px 24px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -33,8 +33,8 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 260px;
-      background: linear-gradient(to bottom, rgba(6,8,16,1) 0%, rgba(6,8,16,0.85) 40%, rgba(6,8,16,0.3) 75%, transparent 100%);
+      height: 200px;
+      background: linear-gradient(to bottom, rgba(6,8,16,1) 0%, rgba(6,8,16,0.8) 40%, rgba(6,8,16,0.2) 80%, transparent 100%);
       pointer-events: none;
       z-index: -1;
     }
@@ -62,7 +62,7 @@
     /* ─── HERO BOTTOM OVERLAY ─────────────────────────────────── */
     .hero-bottom {
       position: absolute;
-      bottom: 40px;
+      bottom: 20px;
       left: 0; right: 0;
       z-index: 10;
       display: flex;
@@ -84,23 +84,20 @@
     .hero-search {
       width: 100%;
       max-width: 480px;
-      background: var(--bg-glass);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 0.5px solid var(--accent-border);
+      background: transparent;
+      border: 0.5px solid rgba(125,171,255,0.12);
       border-radius: var(--radius-md);
       padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: var(--space-sm);
-      cursor: text;
-      transition: border-color var(--transition-fast), box-shadow var(--transition-base);
-      margin-bottom: var(--space-2xl);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.3), 0 0 60px rgba(125,171,255,0.04);
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background var(--transition-base);
+      margin-bottom: var(--space-md);
     }
     .hero-search:hover {
-      border-color: var(--border-hover);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.4), 0 0 80px rgba(125,171,255,0.06);
+      border-color: rgba(125,171,255,0.25);
+      background: rgba(125,171,255,0.04);
     }
     .hero-search-icon { color: var(--accent); font-size: 1.125rem; flex-shrink: 0; }
     .hero-search-text { color: var(--text-muted); font-size: 0.9375rem; flex: 1; }
@@ -213,7 +210,7 @@
     <div class="nav-inner">
       <a href="/" class="nav-logo" aria-label="Home">
         <span class="monogram">DB</span>
-        <span>dipayanbarua</span>
+        <span>DIPAYAN BARUA</span>
       </a>
 
       <div class="nav-links" role="menubar">
@@ -255,36 +252,23 @@
 
     <div class="hero-overlay">
       <h1 class="hero-tagline">Learn the cloud<br>by building it.</h1>
-      <p class="hero-sub">From foundational networking to Azure AI — theory, architecture, click-by-click how-tos, and real-world scenarios. Click any layer to begin.</p>
     </div>
 
     <div class="hero-bottom">
       <!-- Search Bar -->
       <div class="hero-search" role="button" tabindex="0" aria-label="Search" onclick="document.querySelector('.nav-search').click()">
         <span class="hero-search-icon">⌕</span>
-        <span class="hero-search-text">What do you want to learn?</span>
+        <span class="hero-search-text">What do you want to become?</span>
         <span class="hero-search-kbd">⌘K</span>
       </div>
 
       <!-- Role Selector -->
-      <p class="role-label">I want to become a...</p>
-      <div class="role-selector">
+      <div class="role-selector" style="gap:10px;">
         <span class="role-pill" data-role="cloud-engineer">Cloud Engineer</span>
-        <span class="role-pill" data-role="cloud-infra">Cloud Infrastructure Engineer</span>
         <span class="role-pill" data-role="solutions-architect">Solutions Architect</span>
         <span class="role-pill" data-role="devops-engineer">DevOps Engineer</span>
         <span class="role-pill" data-role="security-engineer">Security Engineer</span>
         <span class="role-pill" data-role="sre">SRE</span>
-        <span class="role-pill" data-role="iam-engineer">IAM Engineer</span>
-        <span class="role-pill" data-role="network-engineer">Network Engineer</span>
-        <span class="role-pill" data-role="endpoint-engineer">Endpoint Engineer</span>
-        <span class="role-pill" data-role="systems-admin">Systems Admin</span>
-        <span class="role-pill" data-role="it-support">IT Support</span>
-        <span class="role-pill" data-role="data-engineer">Data Engineer</span>
-        <span class="role-pill" data-role="ai-ml-engineer">AI / ML Engineer</span>
-        <span class="role-pill" data-role="dba">DBA</span>
-        <span class="role-pill" data-role="governance">Governance</span>
-        <span class="role-pill" data-role="backup-dr">Backup & DR</span>
       </div>
     </div>
 
