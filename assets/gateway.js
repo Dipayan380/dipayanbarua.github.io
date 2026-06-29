@@ -59,7 +59,7 @@
 
   /* ─── CAMERA ──────────────────────────────────────────────── */
   var camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 200);
-  camera.position.set(0, 4, 16);
+  camera.position.set(0, 5, 17);
 
   /* ─── RENDERER ────────────────────────────────────────────── */
   var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
@@ -73,7 +73,9 @@
   /* ─── ORBIT CONTROLS ──────────────────────────────────────── */
   var controls = null;
   if (THREE.OrbitControls) {
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    /* Attach to stack-zone (center 50%) so scroll works outside it */
+    var controlTarget = document.getElementById('stack-zone') || renderer.domElement;
+    controls = new THREE.OrbitControls(camera, controlTarget);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
     controls.enablePan = false;

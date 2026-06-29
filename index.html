@@ -41,12 +41,12 @@
     .hero-overlay > * { pointer-events: auto; }
 
     .hero-tagline {
-      font-size: 2.75rem;
+      font-size: 2rem;
       font-weight: 700;
       color: #7DABFF;
       letter-spacing: -0.03em;
       line-height: 1.15;
-      margin-bottom: var(--space-sm);
+      margin-bottom: 0;
       text-shadow: 0 4px 40px rgba(125,171,255,0.3), 0 2px 20px rgba(0,0,0,0.5);
     }
 
@@ -249,6 +249,9 @@
   <!-- ═══ THE GATEWAY — HERO ═══ -->
   <header class="gateway">
     <div id="gateway-canvas" class="gateway-canvas" aria-hidden="true"></div>
+
+    <!-- Invisible stack interaction zone — center 50% of screen -->
+    <div id="stack-zone" style="position:absolute;top:0;left:25%;width:50%;height:100%;z-index:5;cursor:grab;" aria-hidden="true"></div>
 
     <div class="hero-overlay">
       <h1 class="hero-tagline">Learn the cloud<br>by building it.</h1>
