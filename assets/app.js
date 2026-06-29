@@ -153,7 +153,7 @@
       return;
     }
     if (results.length === 0) {
-      cmdResults.innerHTML = '<div class="cmd-empty">Type to search across 10 domains, 51 clusters, and 200+ topics</div>';
+      cmdResults.innerHTML = '<div class="cmd-empty">Type to search across 10 domains, 56 clusters, and 200+ topics</div>';
       return;
     }
     cmdResults.innerHTML = results.map(function (r, i) {
