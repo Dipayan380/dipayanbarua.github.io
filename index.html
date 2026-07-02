@@ -100,7 +100,7 @@
       background: rgba(125,171,255,0.04);
     }
     .hero-search-icon { color: var(--accent); font-size: 1.125rem; flex-shrink: 0; }
-    .hero-search-text { color: var(--text-muted); font-size: 0.9375rem; flex: 1; }
+    .hero-search-text { color: var(--text-muted); font-size: 0.9375rem; flex: 1; transition: opacity 0.35s ease; }
     .hero-search-kbd {
       font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim);
       background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 4px;
@@ -209,8 +209,8 @@
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo" aria-label="Home">
-        <span class="monogram">DB</span>
-        <span>DIPAYAN BARUA</span>
+        <span class="monogram">CC</span>
+        <span>CLOUD CONSTELLATION</span>
       </a>
 
       <div class="nav-links" role="menubar">
@@ -235,7 +235,7 @@
     <div class="cmd-palette">
       <div class="cmd-input-wrap">
         <span class="cmd-icon" aria-hidden="true">⌕</span>
-        <input type="text" class="cmd-input" placeholder="Search domains, clusters, Azure services, certs..." aria-label="Search">
+        <input type="text" class="cmd-input" placeholder="What do you want to become? Search roles, domains, skills..." aria-label="Search">
       </div>
       <div class="cmd-results" role="listbox"></div>
       <div class="cmd-footer">
@@ -261,7 +261,7 @@
       <!-- Search Bar -->
       <div class="hero-search" role="button" tabindex="0" aria-label="Search" onclick="document.querySelector('.nav-search').click()">
         <span class="hero-search-icon">⌕</span>
-        <span class="hero-search-text">What do you want to become?</span>
+        <span class="hero-search-text" id="heroSearchText">What do you want to become?</span>
         <span class="hero-search-kbd">⌘K</span>
       </div>
 
@@ -385,6 +385,58 @@
       var navSearch = document.querySelector('.nav-search');
       if (navSearch) navSearch.click();
     });
+
+    /* ─── ROTATING HERO PROMPT — "What do you want to become?" ───
+       Cycles through real career paths so the search bar visibly
+       ties to the role-first search results. Pauses politely for
+       anyone using prefers-reduced-motion. */
+    (function rotateHeroPrompt() {
+      var el = document.getElementById('heroSearchText');
+      if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var prompts = [
+        'What do you want to become?',
+        'An Azure Cloud Engineer?',
+        'A Solutions Architect?',
+        'A DevOps Engineer?',
+        'A Security Engineer?',
+        'A Site Reliability Engineer?',
+        'An Endpoint Engineer?',
+        'A Data Engineer?'
+      ];
+      var i = 0;
+      setInterval(function () {
+        i = (i + 1) % prompts.length;
+        el.style.opacity = '0';
+        setTimeout(function () {
+          el.textContent = prompts[i];
+          el.style.opacity = '1';
+        }, 350);
+      }, 2600);
+    })();
+
+    /* ─── ROLE HANDOFF FROM SEARCH ─────────────────────────────
+       A role result in the command palette links to
+       /?role=<key>#explore. On load, pick that up, activate the
+       matching pill (if present) so the 3D stack highlights the
+       right domains, and land on the Explore section. */
+    (function applyRoleFromURL() {
+      var params = new URLSearchParams(window.location.search);
+      var role = params.get('role');
+      if (!role) return;
+      var apply = function () {
+        var pill = document.querySelector('.role-pill[data-role="' + role + '"]');
+        if (pill) {
+          pill.click();
+        } else if (typeof window.setStackRole === 'function') {
+          window.setStackRole(role);
+        }
+        var explore = document.getElementById('explore');
+        if (explore) explore.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      /* setStackRole is defined inside gateway.js's IIFE — give it a tick */
+      if (typeof window.setStackRole === 'function') apply();
+      else setTimeout(apply, 300);
+    })();
   </script>
 
 </body>

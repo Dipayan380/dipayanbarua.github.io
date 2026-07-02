@@ -42,8 +42,32 @@
     else document.addEventListener('DOMContentLoaded', mount);
   })();
 
-  /* ─── SEARCH INDEX ────────────────────────────────────────── */
-  const SEARCH_INDEX = [
+  /* ─── ROLE INDEX (career paths — always ranked first) ────────
+     Mirrors the ROLES map in gateway.js. Path points back at the
+     homepage with a role query param + #explore anchor so clicking
+     a role highlights its domains on the 3D stack and scrolls the
+     visitor straight into the matching learning topics. */
+  const ROLE_INDEX = [
+    { title: 'Azure Cloud Engineer', path: '/?role=cloud-engineer#explore', domain: 'Career path', type: 'role', keywords: 'azure cloud engineer role job career compute storage networking identity operations devops resilience hybrid 17 clusters' },
+    { title: 'Cloud Infrastructure Engineer', path: '/?role=cloud-infra#explore', domain: 'Career path', type: 'role', keywords: 'cloud infrastructure engineer role job career compute storage networking operations devops resilience 13 clusters' },
+    { title: 'Solutions Architect', path: '/?role=solutions-architect#explore', domain: 'Career path', type: 'role', keywords: 'solutions architect role job career compute storage networking identity operations devops resilience hybrid ai 18 clusters' },
+    { title: 'DevOps Engineer', path: '/?role=devops-engineer#explore', domain: 'Career path', type: 'role', keywords: 'devops engineer role job career cicd pipelines automation compute identity operations iac hybrid 12 clusters' },
+    { title: 'Security Engineer', path: '/?role=security-engineer#explore', domain: 'Career path', type: 'role', keywords: 'security engineer cybersecurity role job career identity networking defender purview conditional access 8 clusters' },
+    { title: 'Site Reliability Engineer', path: '/?role=sre#explore', domain: 'Career path', type: 'role', keywords: 'site reliability engineer sre role job career compute networking operations devops resilience monitoring 12 clusters' },
+    { title: 'IAM / Identity Engineer', path: '/?role=iam-engineer#explore', domain: 'Career path', type: 'role', keywords: 'iam identity engineer role job career entra id access management rbac conditional access 5 clusters' },
+    { title: 'Network Engineer', path: '/?role=network-engineer#explore', domain: 'Career path', type: 'role', keywords: 'network engineer role job career vnets routing switching vlans firewalls connectivity 8 clusters' },
+    { title: 'Endpoint Engineer', path: '/?role=endpoint-engineer#explore', domain: 'Career path', type: 'role', keywords: 'endpoint engineer role job career intune autopilot device management hybrid workplace 7 clusters' },
+    { title: 'Systems Administrator', path: '/?role=systems-admin#explore', domain: 'Career path', type: 'role', keywords: 'systems administrator sysadmin role job career compute storage operations iac hybrid workplace 13 clusters' },
+    { title: 'IT Support Engineer', path: '/?role=it-support#explore', domain: 'Career path', type: 'role', keywords: 'it support engineer helpdesk role job career troubleshooting hybrid workplace 3 clusters' },
+    { title: 'Data Engineer', path: '/?role=data-engineer#explore', domain: 'Career path', type: 'role', keywords: 'data engineer role job career storage databases analytics ai iot 6 clusters' },
+    { title: 'AI / ML Engineer', path: '/?role=ai-ml-engineer#explore', domain: 'Career path', type: 'role', keywords: 'ai ml engineer machine learning role job career storage azure openai cognitive iot 4 clusters' },
+    { title: 'Database Administrator', path: '/?role=dba#explore', domain: 'Career path', type: 'role', keywords: 'database administrator dba role job career sql cosmos db storage 3 clusters' },
+    { title: 'Cloud Governance Specialist', path: '/?role=governance#explore', domain: 'Career path', type: 'role', keywords: 'cloud governance specialist role job career policy compliance networking identity resilience 7 clusters' },
+    { title: 'Backup & DR Specialist', path: '/?role=backup-dr#explore', domain: 'Career path', type: 'role', keywords: 'backup disaster recovery dr specialist role job career resilience continuity bcdr 4 clusters' },
+  ];
+
+  /* ─── DOMAIN & CLUSTER INDEX ──────────────────────────────── */
+  const DOMAIN_CLUSTER_INDEX = [
     // Domain 0 — The Stack Floor
     { title: 'The Stack Floor', path: '/0-stack-floor/', domain: 'Domain 0', type: 'domain' },
     { title: 'Desktop & Server OS Administration', path: '/0-stack-floor/os-admin.html', domain: 'Domain 0', type: 'cluster', keywords: 'windows 10 11 server linux ubuntu rhel' },
@@ -131,6 +155,9 @@
     { title: 'IoT', path: '/9-ai-iot/iot.html', domain: 'Domain 9', type: 'cluster', keywords: 'iot hub central digital twins stream analytics' },
   ];
 
+  /* Roles first, always — see ranking boost in search() below */
+  const SEARCH_INDEX = ROLE_INDEX.concat(DOMAIN_CLUSTER_INDEX);
+
   /* ─── FUZZY SEARCH ────────────────────────────────────────── */
   function fuzzyMatch(query, text) {
     query = query.toLowerCase();
@@ -150,7 +177,8 @@
       var combined = item.title + ' ' + (item.keywords || '') + ' ' + item.domain;
       var score = fuzzyMatch(query, combined);
       if (score > 0) {
-        if (item.type === 'domain') score += 0.5;
+        if (item.type === 'role') score += 3;        // roles always rank first
+        else if (item.type === 'domain') score += 0.5;
         results.push({ item: item, score: score });
       }
     });
@@ -189,16 +217,17 @@
       return;
     }
     if (results.length === 0) {
-      cmdResults.innerHTML = '<div class="cmd-empty">Type to search across 10 domains, 56 clusters, and 200+ topics</div>';
+      cmdResults.innerHTML = '<div class="cmd-empty">What do you want to become? Search 16 career paths, or browse 10 domains and 56 clusters directly</div>';
       return;
     }
     cmdResults.innerHTML = results.map(function (r, i) {
-      var icon = r.item.type === 'domain' ? '◆' : '○';
+      var icon = r.item.type === 'role' ? '➤' : r.item.type === 'domain' ? '◆' : '○';
+      var meta = r.item.type === 'role' ? 'Career path' : r.item.domain + ' → ' + r.item.type;
       return '<div class="cmd-result' + (i === selectedIndex ? ' selected' : '') + '" data-index="' + i + '">' +
         '<div class="cmd-result-icon">' + icon + '</div>' +
         '<div class="cmd-result-text">' +
         '<div class="cmd-result-title">' + r.item.title + '</div>' +
-        '<div class="cmd-result-path">' + r.item.domain + ' → ' + r.item.type + '</div>' +
+        '<div class="cmd-result-path">' + meta + '</div>' +
         '</div></div>';
     }).join('');
 
