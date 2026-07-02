@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Become a Cloud Infrastructure Engineer — a complete, ordered Azure learning path covering compute, storage, networking, operations, IaC, and resilience, with a live 3D competency map.">
+  <meta name="description" content="A Microsoft cloud learning hub with interactive 3D diagrams, hands-on how-tos, and career-mapped content across Azure, Entra ID, Intune, Defender, and 56 technical clusters.">
+  <meta name="author" content="Dipayan Barua">
   <meta name="theme-color" content="#060810">
-  <meta property="og:title" content="Cloud Infrastructure Engineer — Cloud Constellation">
-  <meta property="og:description" content="A to Z path to becoming a Cloud Infrastructure Engineer: 13 clusters across 6 domains, in order, with a live 3D competency map.">
+  <meta property="og:title" content="Cloud Constellation — Interactive Learning Hub">
+  <meta property="og:description" content="10 domains, 56 clusters. Learn Azure with interactive 3D diagrams, click-by-click how-tos, and real-world scenarios mapped to 16 career paths.">
   <meta property="og:type" content="website">
-  <title>Cloud Infrastructure Engineer — Cloud Constellation</title>
+  <meta property="og:url" content="https://dipayanbarua.com.au">
+  <title>Cloud Constellation — Interactive Learning Hub</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,24 +19,221 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="assets/styles.css">
+
+  <style>
+    /* ─── HERO TOP (tagline only, stays above the stack) ─────── */
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      pointer-events: none;
+      padding: 72px 24px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .hero-overlay::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, rgba(6,8,16,1) 0%, rgba(6,8,16,0.8) 40%, rgba(6,8,16,0.2) 80%, transparent 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .hero-overlay > * { pointer-events: auto; }
+
+    .hero-tagline {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #7DABFF;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 0;
+      text-shadow: 0 4px 40px rgba(125,171,255,0.3), 0 2px 20px rgba(0,0,0,0.5);
+    }
+
+    .hero-sub {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      max-width: 480px;
+      line-height: 1.65;
+      margin-bottom: var(--space-md);
+      text-shadow: 0 1px 20px rgba(0,0,0,0.5);
+    }
+
+    /* ─── HERO BOTTOM OVERLAY ─────────────────────────────────── */
+    .hero-bottom {
+      position: absolute;
+      bottom: 20px;
+      left: 0; right: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      pointer-events: none;
+    }
+    .hero-bottom::before {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 0; right: 0;
+      height: 320px;
+      background: linear-gradient(to top, rgba(6,8,16,1) 0%, rgba(6,8,16,0.85) 35%, rgba(6,8,16,0.3) 70%, transparent 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .hero-bottom > * { pointer-events: auto; }
+    .hero-search {
+      width: 100%;
+      max-width: 480px;
+      background: transparent;
+      border: 0.5px solid rgba(125,171,255,0.12);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background var(--transition-base);
+      margin-bottom: var(--space-md);
+    }
+    .hero-search:hover {
+      border-color: rgba(125,171,255,0.25);
+      background: rgba(125,171,255,0.04);
+    }
+    .hero-search-icon { color: var(--accent); font-size: 1.125rem; flex-shrink: 0; }
+    .hero-search-text { color: var(--text-muted); font-size: 0.9375rem; flex: 1; transition: opacity 0.35s ease; }
+    .hero-search-kbd {
+      font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-dim);
+      background: rgba(255,255,255,0.04); padding: 2px 8px; border-radius: 4px;
+      border: 0.5px solid var(--border-subtle);
+    }
+
+    /* ─── ROLE SELECTOR ───────────────────────────────────────── */
+    .role-selector {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+      max-width: 680px;
+    }
+
+    .role-pill {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border);
+      background: rgba(10,14,24,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      user-select: none;
+    }
+    .role-pill:hover {
+      color: var(--text-bright);
+      border-color: var(--border-hover);
+      background: var(--accent-subtle);
+    }
+    .role-pill.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .role-label {
+      font-size: 0.6875rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: var(--space-sm);
+    }
+
+    /* ─── FULL-PAGE CANVAS ────────────────────────────────────── */
+    .gateway {
+      position: relative;
+      min-height: 100vh;
+    }
+    .gateway-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .gateway-canvas canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* ─── SCROLL HINT ─────────────────────────────────────────── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+      font-size: 0.6875rem;
+      letter-spacing: 1px;
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    .scroll-hint-line {
+      width: 1px;
+      height: 24px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+      50% { opacity: 0.8; transform: translateX(-50%) translateY(4px); }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero-tagline { font-size: 2rem; }
+      .hero-search { max-width: 340px; padding: 12px 16px; }
+      .role-selector { max-width: 360px; }
+      .role-pill { font-size: 0.6875rem; padding: 5px 10px; }
+    }
+  </style>
 </head>
 <body>
 
+  <!-- Cursor Glow -->
   <div class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- Persistent ambient particle background (sitewide) -->
   <div id="particles-bg" class="particles-bg" aria-hidden="true"></div>
 
-  <!-- Navigation -->
+  <!-- Navigation — Minimal -->
   <nav class="nav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
-      <a href="/" class="nav-logo" aria-label="Home"><span class="monogram">CC</span><span>CLOUD CONSTELLATION</span></a>
+      <a href="/" class="nav-logo" aria-label="Home">
+        <span class="monogram">CC</span>
+        <span>CLOUD CONSTELLATION</span>
+      </a>
+
       <div class="nav-links" role="menubar">
-        <a href="/#explore" class="nav-link" role="menuitem">Explore</a>
-        <a href="/#careers" class="nav-link active" role="menuitem">Careers</a>
-        <a href="/about.html" class="nav-link" role="menuitem">About</a>
+        <a href="#explore" class="nav-link active" role="menuitem">Explore</a>
+        <a href="#careers" class="nav-link" role="menuitem">Careers</a>
+        <a href="about.html" class="nav-link" role="menuitem">About</a>
       </div>
-      <div style="flex:1;"></div>
-      <div class="nav-search" role="button" tabindex="0" aria-label="Search"><span class="nav-search-text">Search</span><span class="nav-search-kbd">⌘K</span></div>
+
+      <div class="nav-spacer" style="flex:1;"></div>
+
+      <div class="nav-search" role="button" tabindex="0" aria-label="Search (⌘K)">
+        <span class="nav-search-text">Search</span>
+        <span class="nav-search-kbd" aria-hidden="true">⌘K</span>
+      </div>
+
       <button class="nav-mobile-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     </div>
   </nav>
@@ -42,237 +241,214 @@
   <!-- Command Palette -->
   <div class="cmd-overlay" role="dialog" aria-label="Search palette" aria-modal="true">
     <div class="cmd-palette">
-      <div class="cmd-input-wrap"><span class="cmd-icon">⌕</span><input type="text" class="cmd-input" placeholder="What do you want to become? Search roles, domains, skills..." aria-label="Search"></div>
+      <div class="cmd-input-wrap">
+        <span class="cmd-icon" aria-hidden="true">⌕</span>
+        <input type="text" class="cmd-input" placeholder="What do you want to become? Search roles, domains, skills..." aria-label="Search">
+      </div>
       <div class="cmd-results" role="listbox"></div>
-      <div class="cmd-footer"><span><kbd>↑↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+      <div class="cmd-footer">
+        <span><kbd>↑↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+        <span><kbd>esc</kbd> close</span>
+      </div>
     </div>
   </div>
 
-  <!-- Breadcrumb -->
-  <div class="breadcrumbs" style="max-width:var(--content-max);margin:0 auto;padding-left:var(--space-lg);padding-top:96px;position:relative;z-index:1;">
-    <a href="/">Cloud Constellation</a><span class="separator">/</span><a href="/#careers">Careers</a><span class="separator">/</span><span class="current">Cloud Infrastructure Engineer</span>
-  </div>
+  <!-- ═══ THE GATEWAY — HERO ═══ -->
+  <header class="gateway">
+    <div id="gateway-canvas" class="gateway-canvas" aria-hidden="true"></div>
 
-  <!-- ═══ ROLE HERO ═══ -->
-  <header class="domain-hero" style="position:relative;z-index:1;padding-top:var(--space-xl);">
-    <p class="domain-number">CAREER PATH</p>
-    <h1>Cloud Infrastructure Engineer</h1>
-    <p class="domain-desc">You keep Azure environments running: provisioned, networked, monitored, backed up, and defined as code. This is the complete, ordered path — every cluster you need, in the sequence that builds on itself, nothing you don't.</p>
-    <div class="domain-stats">
-      <span><strong>13</strong> clusters</span>
-      <span><strong>6</strong> domains</span>
-      <span><strong>~65</strong> hours</span>
-      <span><strong>AZ-104 · AZ-305</strong> aligned</span>
+    <!-- Invisible stack interaction zone — center 50% of screen -->
+    <div id="stack-zone" style="position:absolute;top:0;left:25%;width:50%;height:100%;z-index:5;cursor:grab;touch-action:none;" aria-hidden="true"></div>
+
+    <div class="hero-overlay">
+      <h1 class="hero-tagline">Learn the cloud<br>by building it.</h1>
+    </div>
+
+    <div class="hero-bottom">
+      <!-- Search Bar -->
+      <div class="hero-search" role="button" tabindex="0" aria-label="Search" onclick="document.querySelector('.nav-search').click()">
+        <span class="hero-search-icon">⌕</span>
+        <span class="hero-search-text" id="heroSearchText">What do you want to become?</span>
+        <span class="hero-search-kbd">⌘K</span>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="role-selector" style="gap:10px;">
+        <span class="role-pill" data-role="cloud-engineer">Cloud Engineer</span>
+        <span class="role-pill" data-role="solutions-architect">Solutions Architect</span>
+        <span class="role-pill" data-role="devops-engineer">DevOps Engineer</span>
+        <span class="role-pill" data-role="security-engineer">Security Engineer</span>
+        <span class="role-pill" data-role="sre">SRE</span>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-hint">
+      <div class="scroll-hint-line"></div>
+      <span>SCROLL</span>
     </div>
   </header>
 
-  <!-- ═══ LIVE 3D COMPETENCY MAP ═══ -->
-  <section class="career-orbit-wrap">
-    <div id="career-orbit-canvas" class="career-orbit-canvas" aria-label="Interactive 3D map of the domains this role covers"></div>
-    <p class="career-orbit-hint">Drag to rotate · click a node to jump straight into that domain</p>
+  <!-- ═══ DOMAIN CARDS ═══ -->
+  <section id="explore" class="section">
+    <div class="section-header">
+      <p class="eyebrow">10 Domains</p>
+      <h2>Explore the stack</h2>
+      <p class="lead">Every layer of the Microsoft cloud. Each domain contains clusters of hands-on content with 3D diagrams, how-to guides, and career mapping.</p>
+    </div>
+    <div class="domain-grid">
+      <a href="/0-stack-floor/" class="domain-card reveal" style="--card-accent:#A0AEC0;"><span class="card-number">00</span><h3 class="card-title">The Stack Floor</h3><p class="card-desc">IT fundamentals, networking, virtualisation, and scripting. The foundation everything else builds on.</p><div class="card-meta"><span class="card-badge">11 clusters</span><span>Physical</span></div></a>
+      <a href="/1-compute/" class="domain-card reveal" style="--card-accent:#FF6B00;"><span class="card-number">01</span><h3 class="card-title">Compute & Application Platform</h3><p class="card-desc">Virtual machines, serverless functions, containers, Kubernetes, and scalability patterns.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>IaaS · PaaS</span></div></a>
+      <a href="/2-storage/" class="domain-card reveal" style="--card-accent:#00FFD1;"><span class="card-number">02</span><h3 class="card-title">Storage & Data</h3><p class="card-desc">Blob, disk, and file storage. Azure SQL, Cosmos DB, Synapse Analytics, and data pipelines.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>IaaS · PaaS</span></div></a>
+      <a href="/3-networking/" class="domain-card reveal" style="--card-accent:#00E5FF;"><span class="card-number">03</span><h3 class="card-title">Networking</h3><p class="card-desc">VNets, VPN Gateway, ExpressRoute, load balancers, firewalls, CDN, and global Azure regions.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>IaaS</span></div></a>
+      <a href="/4-identity-security/" class="domain-card reveal" style="--card-accent:#4D7DFF;"><span class="card-number">04</span><h3 class="card-title">Identity & Security</h3><p class="card-desc">Entra ID, RBAC, Conditional Access, Key Vault, Microsoft Defender, Purview, and compliance.</p><div class="card-meta"><span class="card-badge">6 clusters</span><span>Cloud Management</span></div></a>
+      <a href="/5-operations/" class="domain-card reveal" style="--card-accent:#00FF88;"><span class="card-number">05</span><h3 class="card-title">Operations & Management</h3><p class="card-desc">Azure Monitor, Log Analytics, governance, policy, cost management, and patch management.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>Cloud Management</span></div></a>
+      <a href="/6-iac-devops/" class="domain-card reveal" style="--card-accent:#BF5AF2;"><span class="card-number">06</span><h3 class="card-title">Infrastructure as Code & DevOps</h3><p class="card-desc">Bicep, Terraform, Azure Automation, CI/CD pipelines, GitHub Actions, and source control.</p><div class="card-meta"><span class="card-badge">5 clusters</span><span>PaaS</span></div></a>
+      <a href="/7-resilience/" class="domain-card reveal" style="--card-accent:#FF3B3B;"><span class="card-number">07</span><h3 class="card-title">Resilience & Continuity</h3><p class="card-desc">Azure Backup, Site Recovery, high availability, availability zones, and BCDR planning.</p><div class="card-meta"><span class="card-badge">4 clusters</span><span>IaaS</span></div></a>
+      <a href="/8-hybrid-workplace/" class="domain-card reveal" style="--card-accent:#FF2D78;"><span class="card-number">08</span><h3 class="card-title">Hybrid, Endpoint & Workplace</h3><p class="card-desc">Windows Server, Linux on Azure, Azure Arc, Intune, M365 Admin, SharePoint, and OneDrive.</p><div class="card-meta"><span class="card-badge">6 clusters</span><span>SaaS · Cloud Management</span></div></a>
+      <a href="/9-ai-iot/" class="domain-card reveal" style="--card-accent:#FFD60A;"><span class="card-number">09</span><h3 class="card-title">AI, Data & IoT</h3><p class="card-desc">Azure Machine Learning, OpenAI Service, Cognitive AI Services, IoT Hub, and Digital Twins.</p><div class="card-meta"><span class="card-badge">4 clusters</span><span>PaaS</span></div></a>
+    </div>
   </section>
 
-  <!-- ═══ WHO THIS IS FOR ═══ -->
-  <section class="section" style="padding-top:0;">
-    <div class="reading-layout" style="grid-template-columns:1fr;padding-top:0;">
-      <div class="content" style="max-width:var(--reading-max);margin:0 auto;">
+  <!-- ═══ CAREER PATHS ═══ -->
+  <section id="careers" class="section">
+    <div class="section-header">
+      <p class="eyebrow">Career mapping</p>
+      <h2>Every cluster leads somewhere</h2>
+      <p class="lead">16 real-world job roles mapped to the exact clusters you need to study. Pick a role, see your learning path.</p>
+    </div>
+    <div class="domain-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+      <a href="/careers/azure-cloud-engineer/" class="cluster-card reveal"><span class="cluster-id">17 clusters</span><span class="cluster-title">Azure Cloud Engineer</span></a>
+      <a href="/careers/cloud-infrastructure-engineer/" class="cluster-card reveal"><span class="cluster-id">13 clusters</span><span class="cluster-title">Cloud Infrastructure Engineer</span></a>
+      <a href="/?role=solutions-architect#explore" class="cluster-card reveal"><span class="cluster-id">18 clusters</span><span class="cluster-title">Solutions Architect</span></a>
+      <a href="/?role=devops-engineer#explore" class="cluster-card reveal"><span class="cluster-id">12 clusters</span><span class="cluster-title">DevOps Engineer</span></a>
+      <a href="/?role=security-engineer#explore" class="cluster-card reveal"><span class="cluster-id">8 clusters</span><span class="cluster-title">Security Engineer</span></a>
+      <a href="/?role=sre#explore" class="cluster-card reveal"><span class="cluster-id">12 clusters</span><span class="cluster-title">Site Reliability Engineer</span></a>
+      <a href="/?role=iam-engineer#explore" class="cluster-card reveal"><span class="cluster-id">5 clusters</span><span class="cluster-title">IAM / Identity Engineer</span></a>
+      <a href="/?role=network-engineer#explore" class="cluster-card reveal"><span class="cluster-id">8 clusters</span><span class="cluster-title">Network Engineer</span></a>
+      <a href="/?role=endpoint-engineer#explore" class="cluster-card reveal"><span class="cluster-id">7 clusters</span><span class="cluster-title">Endpoint Engineer</span></a>
+      <a href="/?role=systems-admin#explore" class="cluster-card reveal"><span class="cluster-id">13 clusters</span><span class="cluster-title">Systems Administrator</span></a>
+      <a href="/?role=it-support#explore" class="cluster-card reveal"><span class="cluster-id">3 clusters</span><span class="cluster-title">IT Support Engineer</span></a>
+      <a href="/?role=data-engineer#explore" class="cluster-card reveal"><span class="cluster-id">6 clusters</span><span class="cluster-title">Data Engineer</span></a>
+      <a href="/?role=ai-ml-engineer#explore" class="cluster-card reveal"><span class="cluster-id">4 clusters</span><span class="cluster-title">AI / ML Engineer</span></a>
+      <a href="/?role=dba#explore" class="cluster-card reveal"><span class="cluster-id">3 clusters</span><span class="cluster-title">Database Administrator</span></a>
+      <a href="/?role=governance#explore" class="cluster-card reveal"><span class="cluster-id">7 clusters</span><span class="cluster-title">Cloud Governance Specialist</span></a>
+      <a href="/?role=backup-dr#explore" class="cluster-card reveal"><span class="cluster-id">4 clusters</span><span class="cluster-title">Backup & DR Specialist</span></a>
+    </div>
+  </section>
 
-        <h2 style="margin-top:0;">Who this is for</h2>
-        <p>You're comfortable at a terminal, curious about how systems fit together, and want to be the person a team trusts to keep infrastructure up, secure, and cost-sane. No prior Azure experience required — <a href="/0-stack-floor/">The Stack Floor</a> domain covers the IT fundamentals underneath this path if you need them first.</p>
-
-        <div class="callout info">
-          <div class="callout-title">How this path works</div>
-          Each cluster below links to its real lesson page. Go in order the first time through — later clusters assume the ones before them. Once you've done a full pass, come back and use it as reference.
-        </div>
-
-        <h2>The path — in order</h2>
-
-        <h3 style="margin-top:var(--space-xl);">1 · Compute foundations</h3>
-        <div class="how-to">
-          <div class="step">
-            <div class="step-number">01</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/1-compute/virtual-machines.html">Virtual Machines &amp; Compute</a></div>
-              <div class="step-desc">Provisioning, sizing, scale sets, availability sets, and dedicated hosts — the baseline unit of Azure infrastructure.</div>
-              <span class="step-path">Domain 1 · Compute</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">02</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/1-compute/containers.html">Containers</a></div>
-              <div class="step-desc">Docker fundamentals, Azure Container Instances, Container Apps, and the registry that backs them.</div>
-              <span class="step-path">Domain 1 · Compute</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">03</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/1-compute/scalability.html">Scalability &amp; Elasticity</a></div>
-              <div class="step-desc">Autoscaling patterns — scale sets, KEDA, and knowing when to scale out versus up.</div>
-              <span class="step-path">Domain 1 · Compute</span>
-            </div>
-          </div>
-        </div>
-
-        <h3>2 · Storage foundations</h3>
-        <div class="how-to">
-          <div class="step">
-            <div class="step-number">04</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/2-storage/object-file-storage.html">Object &amp; File Storage</a></div>
-              <div class="step-desc">Blob storage, Azure Files, access tiers, and lifecycle management.</div>
-              <span class="step-path">Domain 2 · Storage</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">05</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/2-storage/disk-storage.html">Disk &amp; Block Storage</a></div>
-              <div class="step-desc">Managed disks, Ultra/Premium SSD tiers, and snapshot strategy.</div>
-              <span class="step-path">Domain 2 · Storage</span>
-            </div>
-          </div>
-        </div>
-
-        <h3>3 · Networking</h3>
-        <div class="how-to">
-          <div class="step">
-            <div class="step-number">06</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/3-networking/core-networking.html">Core Networking</a></div>
-              <div class="step-desc">VNets, subnets, peering, NSGs, route tables, and private/service endpoints — everything else in this domain builds on this.</div>
-              <span class="step-path">Domain 3 · Networking</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">07</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/3-networking/connectivity.html">Connectivity</a></div>
-              <div class="step-desc">VPN Gateway, ExpressRoute, Virtual WAN, and Azure Bastion for secure hybrid access.</div>
-              <span class="step-path">Domain 3 · Networking</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">08</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/3-networking/firewall-network-security.html">Firewall &amp; Network Security</a></div>
-              <div class="step-desc">Azure Firewall Manager, DDoS Protection, WAF, and NSG hardening.</div>
-              <span class="step-path">Domain 3 · Networking</span>
-            </div>
-          </div>
-        </div>
-
-        <h3>4 · Operations &amp; governance</h3>
-        <div class="how-to">
-          <div class="step">
-            <div class="step-number">09</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/5-operations/monitoring.html">Monitoring &amp; Observability</a></div>
-              <div class="step-desc">Azure Monitor, Log Analytics, Application Insights, and the dashboards that tell you something's wrong before a user does.</div>
-              <span class="step-path">Domain 5 · Operations</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">10</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/5-operations/governance-policy.html">Governance &amp; Policy</a></div>
-              <div class="step-desc">Azure Policy, management groups, subscriptions, resource groups, and tagging discipline at scale.</div>
-              <span class="step-path">Domain 5 · Operations</span>
-            </div>
-          </div>
-        </div>
-
-        <h3>5 · Infrastructure as Code</h3>
-        <div class="how-to">
-          <div class="step">
-            <div class="step-number">11</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/6-iac-devops/arm-bicep.html">ARM Templates &amp; Bicep</a></div>
-              <div class="step-desc">Declarative infrastructure — the native Azure IaC toolchain, and why it beats clicking through the portal by hand.</div>
-              <span class="step-path">Domain 6 · IaC &amp; DevOps</span>
-            </div>
-          </div>
-        </div>
-
-        <h3>6 · Resilience</h3>
-        <div class="how-to">
-          <div class="step">
-            <div class="step-number">12</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/7-resilience/backup.html">Azure Backup</a></div>
-              <div class="step-desc">Recovery Services vaults, backup policies, and the MARS agent.</div>
-              <span class="step-path">Domain 7 · Resilience</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-number">13</div>
-            <div class="step-content">
-              <div class="step-title"><a href="/7-resilience/high-availability.html">High Availability &amp; Resilience</a></div>
-              <div class="step-desc">Availability zones, region pairs, multi-region architecture, and the SLA math behind them — the capstone that ties the whole path together.</div>
-              <span class="step-path">Domain 7 · Resilience</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="callout tip">
-          <div class="callout-title">Optional, but worth it</div>
-          Once you've completed the path, <a href="/6-iac-devops/terraform.html">Terraform on Azure</a> and <a href="/1-compute/aks.html">Kubernetes (AKS)</a> are the two clusters infra engineers reach for next most often — not required for this path, but a natural extension.
-        </div>
-
-        <h2>Certifications this path maps to</h2>
-        <div class="tag-row">
-          <span class="tag cert">AZ-104: Azure Administrator</span>
-          <span class="tag cert">AZ-305: Solutions Architect Expert</span>
-        </div>
-
-        <h2>Where this leads</h2>
-        <p>Cloud Infrastructure Engineer is a strong base for two directions: go deeper into automation and pipelines toward <a href="/?role=devops-engineer#explore">DevOps Engineer</a>, or go broader into design and trade-offs toward <a href="/?role=solutions-architect#explore">Solutions Architect</a>. Both build directly on everything above.</p>
-
-        <div style="display:flex;gap:12px;margin-top:var(--space-2xl);flex-wrap:wrap;">
-          <a href="/1-compute/virtual-machines.html" class="btn btn-primary">Start the path →</a>
-          <a href="/#careers" class="btn btn-ghost">See other career paths</a>
-        </div>
-
+  <!-- ═══ CONTACT ═══ -->
+  <section class="section">
+    <div class="contact-card reveal">
+      <p class="eyebrow">Get in touch</p>
+      <h2 style="margin-top: 8px;">Built by Dipayan Barua</h2>
+      <p style="color: var(--text-secondary); margin-top: 8px;">Systems Engineer based in Sydney, Australia. Building this platform as a comprehensive Microsoft cloud learning resource.</p>
+      <div class="contact-links">
+        <a href="https://linkedin.com/in/dipayanbarua" class="contact-link" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:it.dipayan@gmail.com" class="contact-link">Email</a>
+        <a href="https://github.com/Dipayan380" class="contact-link" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer" style="position:relative;z-index:1;">
+  <footer class="footer">
     <span>&copy; 2026 Dipayan Barua. All rights reserved.</span>
     <div class="footer-links">
-      <a href="/">Home</a>
+      <a href="about.html">About</a>
       <a href="https://linkedin.com/in/dipayanbarua" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://github.com/Dipayan380" target="_blank" rel="noopener">GitHub</a>
     </div>
   </footer>
 
-  <!-- Three.js + OrbitControls (for the competency orbit diagram) -->
+  <!-- Three.js + OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
   <!-- Ambient particle background (sitewide) -->
-  <script src="/assets/particles.js"></script>
-
-  <!-- Career orbit config — this is the only thing that changes between role pages -->
-  <script>
-    window.CAREER_ORBIT_CONFIG = {
-      mount: 'career-orbit-canvas',
-      nodes: [
-        { label: 'Compute',      color: 0xFF6B00, path: '/1-compute/' },
-        { label: 'Storage',      color: 0x00FFD1, path: '/2-storage/' },
-        { label: 'Networking',   color: 0x00E5FF, path: '/3-networking/' },
-        { label: 'Operations',   color: 0x00FF88, path: '/5-operations/' },
-        { label: 'IaC & DevOps', color: 0xBF5AF2, path: '/6-iac-devops/' },
-        { label: 'Resilience',   color: 0xFF3B3B, path: '/7-resilience/' }
-      ]
-    };
-  </script>
-  <script src="/assets/career-orbit.js"></script>
+  <script src="assets/particles.js"></script>
 
   <!-- App Scripts -->
-  <script src="/assets/app.js"></script>
+  <script src="assets/gateway.js"></script>
+  <script src="assets/app.js"></script>
+
+  <!-- Role Selector Logic -->
+  <script>
+    document.querySelectorAll('.role-pill').forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        var role = pill.dataset.role;
+        var wasActive = pill.classList.contains('active');
+
+        document.querySelectorAll('.role-pill').forEach(function(p) { p.classList.remove('active'); });
+
+        if (!wasActive) {
+          pill.classList.add('active');
+        }
+
+        if (typeof window.setStackRole === 'function') {
+          window.setStackRole(wasActive ? null : role);
+        }
+      });
+    });
+
+    document.querySelector('.hero-search').addEventListener('click', function() {
+      var navSearch = document.querySelector('.nav-search');
+      if (navSearch) navSearch.click();
+    });
+
+    /* ─── ROTATING HERO PROMPT — "What do you want to become?" ───
+       Cycles through real career paths so the search bar visibly
+       ties to the role-first search results. Pauses politely for
+       anyone using prefers-reduced-motion. */
+    (function rotateHeroPrompt() {
+      var el = document.getElementById('heroSearchText');
+      if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var prompts = [
+        'What do you want to become?',
+        'An Azure Cloud Engineer?',
+        'A Solutions Architect?',
+        'A DevOps Engineer?',
+        'A Security Engineer?',
+        'A Site Reliability Engineer?',
+        'An Endpoint Engineer?',
+        'A Data Engineer?'
+      ];
+      var i = 0;
+      setInterval(function () {
+        i = (i + 1) % prompts.length;
+        el.style.opacity = '0';
+        setTimeout(function () {
+          el.textContent = prompts[i];
+          el.style.opacity = '1';
+        }, 350);
+      }, 2600);
+    })();
+
+    /* ─── ROLE HANDOFF FROM SEARCH ─────────────────────────────
+       A role result in the command palette links to
+       /?role=<key>#explore. On load, pick that up, activate the
+       matching pill (if present) so the 3D stack highlights the
+       right domains, and land on the Explore section. */
+    (function applyRoleFromURL() {
+      var params = new URLSearchParams(window.location.search);
+      var role = params.get('role');
+      if (!role) return;
+      var apply = function () {
+        var pill = document.querySelector('.role-pill[data-role="' + role + '"]');
+        if (pill) {
+          pill.click();
+        } else if (typeof window.setStackRole === 'function') {
+          window.setStackRole(role);
+        }
+        var explore = document.getElementById('explore');
+        if (explore) explore.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+      /* setStackRole is defined inside gateway.js's IIFE — give it a tick */
+      if (typeof window.setStackRole === 'function') apply();
+      else setTimeout(apply, 300);
+    })();
+  </script>
 
 </body>
 </html>
