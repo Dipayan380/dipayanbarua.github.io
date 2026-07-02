@@ -17,8 +17,11 @@
     return;
   }
 
+  /* ─── MOBILE DETECTION ────────────────────────────────────── */
+  var isMobile = window.innerWidth < 768;
+
   /* ─── CONFIG ──────────────────────────────────────────────── */
-  var PARTICLE_COUNT = 1200;
+  var PARTICLE_COUNT = isMobile ? 450 : 1200;
   var LINE_DISTANCE = 2.5;
 
   var DOMAINS = [
@@ -63,9 +66,9 @@
   camera.position.set(0, 5, 17);
 
   /* ─── RENDERER ────────────────────────────────────────────── */
-  var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+  var renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 2 : 3));
   renderer.toneMapping = THREE.ACESFilmicToneMapping || 4;
   renderer.toneMappingExposure = 1.5;
   if (renderer.outputEncoding !== undefined) renderer.outputEncoding = THREE.sRGBEncoding || 3001;
@@ -105,6 +108,7 @@
   scene.add(stackGroup);
 
   var layerMeshes = [];
+  var hitMeshes = [];   // padded, invisible tap targets — see below
   var layerSpacing = 0.7;
   var totalHeight = 9 * layerSpacing;
   var startY = -totalHeight / 2;
@@ -129,6 +133,19 @@
     mesh.userData = { domainIndex: i, domain: d, baseEmissive: 0.4, baseOpacity: 0.6 };
     stackGroup.add(mesh);
     layerMeshes.push(mesh);
+
+    /* Padded invisible hitbox — the real slab is only 0.18 units tall,
+       far too thin to click/tap reliably. This is 0.6 tall (still less
+       than the 0.7 layer spacing, so neighbours never overlap) and wider
+       on X/Z, giving mouse and finger input a generous, forgiving target
+       while the visible slab stays exactly as designed. Shares userData
+       by reference so hover/emissive/dive logic needs zero other changes. */
+    var hitGeo = new THREE.BoxGeometry(6.4, 0.6, 3.4);
+    var hitMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+    var hitMesh = new THREE.Mesh(hitGeo, hitMat);
+    hitMesh.userData = mesh.userData;
+    mesh.add(hitMesh);
+    hitMeshes.push(hitMesh);
 
     /* Edge wireframe */
     var edgeGeo = new THREE.EdgesGeometry(geo);
@@ -247,9 +264,13 @@
     lookStart.copy(controls ? controls.target : new THREE.Vector3(0, 1.5, 0));
     lookEnd.copy(P).addScaledVector(dir, 8);          // aim down the tunnel
 
-    /* Spotlight the chosen layer, recede the rest for tunnel focus */
+    /* Spotlight the chosen layer, recede the rest for tunnel focus.
+       Compare by domainIndex, not object identity — `mesh` here is
+       whichever object the raycaster hit (the padded hitbox), while
+       this loop walks the *visible* slabs. */
+    var chosenIndex = mesh.userData.domainIndex;
     layerMeshes.forEach(function (m) {
-      if (m === mesh) {
+      if (m.userData.domainIndex === chosenIndex) {
         m.userData.targetEmissive = 1.6;
         m.userData.targetOpacity = 1.0;
       } else {
@@ -291,36 +312,35 @@
     }
   }
 
-  /* Robust click: raycast fresh from the click point (works whether the
-     event lands on the canvas or the stack-zone overlay), with a drag
-     guard so rotating the stack never fires a dive. */
-  var downX = 0, downY = 0, downMoved = false;
-  function onDown(e) {
-    var p = e.touches ? e.touches[0] : e;
-    downX = p.clientX; downY = p.clientY; downMoved = false;
+  /* Robust click: unified Pointer Events (covers mouse, touch, and pen
+     in one code path — no more separate mouse/touch listeners to keep
+     in sync). Raycast fresh from the pointer-up point against the
+     padded hitboxes, with a drag guard so rotating the stack never
+     fires a dive. */
+  var downX = 0, downY = 0;
+  function onPointerDown(e) {
+    downX = e.clientX; downY = e.clientY;
   }
-  function onUp(e) {
+  function onPointerUp(e) {
     if (diving) return;
-    var p = e.changedTouches ? e.changedTouches[0] : e;
-    var moved = Math.abs(p.clientX - downX) + Math.abs(p.clientY - downY);
-    if (moved > 6) return;  // was a drag/orbit, not a click
+    var moved = Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY);
+    if (moved > 8) return;  // was a drag/orbit, not a tap/click
     var rect = container.getBoundingClientRect();
     var v = new THREE.Vector2(
-      ((p.clientX - rect.left) / rect.width) * 2 - 1,
-      -((p.clientY - rect.top) / rect.height) * 2 + 1
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1
     );
     raycaster.setFromCamera(v, camera);
-    var hits = raycaster.intersectObjects(layerMeshes);
+    var hits = raycaster.intersectObjects(hitMeshes);
     if (hits.length > 0) startDive(hits[0].object);
   }
 
   var zone = document.getElementById('stack-zone');
   [container, zone].forEach(function (el) {
     if (!el) return;
-    el.addEventListener('mousedown', onDown, { passive: true });
-    el.addEventListener('mouseup', onUp);
-    el.addEventListener('touchstart', onDown, { passive: true });
-    el.addEventListener('touchend', onUp);
+    el.style.touchAction = 'none';   // stop mobile browsers hijacking the gesture as scroll/zoom
+    el.addEventListener('pointerdown', onPointerDown, { passive: true });
+    el.addEventListener('pointerup', onPointerUp);
   });
 
   /* ─── ROLE HIGHLIGHTING ───────────────────────────────────── */
@@ -435,7 +455,7 @@
     /* Raycaster — hover detection (skipped during a dive) */
     if (!diving) {
     raycaster.setFromCamera(mouse, camera);
-    var intersects = raycaster.intersectObjects(layerMeshes);
+    var intersects = raycaster.intersectObjects(hitMeshes);
 
     if (intersects.length > 0) {
       var hit = intersects[0].object;
@@ -523,7 +543,7 @@
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 3));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 2 : 3));
     }, 100);
   });
 

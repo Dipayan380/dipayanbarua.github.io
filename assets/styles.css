@@ -1318,6 +1318,90 @@ hr {
 }
 .contact-link:hover { color: var(--accent); }
 
+/* ─── CAREER ORBIT DIAGRAM (role pages) ───────────────────────── */
+.career-orbit-wrap {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--space-lg) var(--space-2xl);
+}
+
+.career-orbit-canvas {
+  position: relative;
+  height: 420px;
+  border-radius: var(--radius-lg);
+  border: var(--glass-border);
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(125,171,255,0.05) 0%, transparent 70%), var(--bg-glass);
+  overflow: hidden;
+}
+.career-orbit-canvas canvas { width: 100% !important; height: 100% !important; display: block; cursor: grab; }
+
+.career-orbit-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: var(--space-sm);
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 768px) {
+  .career-orbit-canvas { height: 320px; }
+}
+
+/* ─── MOBILE POLISH — touch targets, safe areas, tap response ─── */
+/* touch-action: manipulation removes the ~300ms tap delay and blocks
+   double-tap-to-zoom on things meant to be tapped once, everywhere —
+   desktop pointer behaviour is unaffected. */
+a, button, .role-pill, .cluster-card, .domain-card, .nav-search,
+.hero-search, .cmd-result, .step, .nav-mobile-toggle {
+  touch-action: manipulation;
+}
+
+/* Safe-area padding for notches / home indicators (iPhone, some Android) */
+.nav-inner {
+  padding-left: max(var(--space-lg), env(safe-area-inset-left));
+  padding-right: max(var(--space-lg), env(safe-area-inset-right));
+}
+.footer {
+  padding-left: max(var(--space-lg), env(safe-area-inset-left));
+  padding-right: max(var(--space-lg), env(safe-area-inset-right));
+  padding-bottom: max(var(--space-3xl), env(safe-area-inset-bottom));
+}
+
+@media (max-width: 768px) {
+  /* Real 44px minimum touch targets (Apple/Google HIG baseline) */
+  .nav-mobile-toggle { min-width: 44px; min-height: 44px; }
+  .nav-link { min-height: 40px; display: flex; align-items: center; }
+  .role-pill { padding: 10px 16px; min-height: 40px; display: inline-flex; align-items: center; }
+  .cmd-result { padding: 12px var(--space-lg); min-height: 44px; }
+  .btn { min-height: 44px; }
+  .cmd-result-icon { width: 36px; height: 36px; }
+
+  /* Command palette: full-bleed and thumb-reachable on small screens */
+  .cmd-overlay { padding-top: 8vh; padding-left: 12px; padding-right: 12px; }
+  .cmd-palette { max-width: 100%; }
+  .cmd-results { max-height: 50vh; }
+
+  /* Prevent any stray element from creating horizontal scroll on narrow viewports */
+  body { overflow-x: hidden; }
+}
+
+@media (max-width: 480px) {
+  .hero-search-kbd { display: none; }  /* ⌘K is meaningless on a phone keyboard */
+  .career-orbit-hint { padding: 0 var(--space-md); }
+}
+
+/* ─── PERSISTENT PARTICLE BACKGROUND (sitewide) ──────────────── */
+/* z-index: -1, not 0 — a positioned z:0 element actually paints ON
+   TOP of ordinary static content per CSS stacking rules. Negative
+   z-index is what reliably stays behind everything, on every page,
+   with no per-section position/z-index hacks needed anywhere else. */
+.particles-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* ─── ABOUT PAGE ──────────────────────────────────────────────── */
 .about-content {
   max-width: 680px;
