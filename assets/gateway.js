@@ -12,10 +12,13 @@
   if (!container || typeof THREE === 'undefined') return;
 
   /* ─── REDUCED MOTION ──────────────────────────────────────── */
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    container.style.background = '#060810';
-    return;
-  }
+  /* IMPORTANT: this must only tone down decorative animation
+     (autorotate, idle float, particle drift, the flashy fly-through
+     dive), never skip building the scene itself — the stack still
+     needs to render and stay clickable for anyone with this
+     preference on. An earlier version of this file bailed out
+     completely here, which silently killed the whole homepage. */
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ─── MOBILE DETECTION ────────────────────────────────────── */
   var isMobile = window.innerWidth < 768;
@@ -86,7 +89,7 @@
     controls.minDistance = 8;
     controls.maxDistance = 30;
     controls.target.set(0, 1.5, 0);
-    controls.autoRotate = true;
+    controls.autoRotate = !reducedMotion;
     controls.autoRotateSpeed = 1.2;
     controls.update();
   }
@@ -291,7 +294,20 @@
   }
 
   function updateDive(now) {
-    var t = clamp01((now - diveStart) / DIVE_DURATION);
+    var duration = reducedMotion ? 380 : DIVE_DURATION;
+    var t = clamp01((now - diveStart) / duration);
+
+    if (reducedMotion) {
+      /* No camera movement, no FOV punch — just a clean colour fade.
+         This is the motion reduced-motion is meant to prevent, so we
+         skip it entirely rather than tone it down partway. */
+      diveOverlay.style.opacity = String(easeOutQuad(t));
+      if (!navigated && t >= 1) {
+        navigated = true;
+        window.location.href = divePath;
+      }
+      return;
+    }
 
     /* Position accelerates (easeInCubic); aim locks onto the slab fast */
     camera.position.lerpVectors(camStart, camEnd, easeInCubic(t));
@@ -339,7 +355,31 @@
   }
 
   function updateReverseDive(now) {
-    var t = clamp01((now - reverseStart) / DIVE_DURATION);
+    var duration = reducedMotion ? 380 : DIVE_DURATION;
+    var t = clamp01((now - reverseStart) / duration);
+
+    if (reducedMotion) {
+      diveOverlay.style.opacity = String(1 - easeOutQuad(t));
+      layerMeshes.forEach(function (m) {
+        m.userData.targetEmissive = m.userData.baseEmissive;
+        m.userData.targetOpacity = m.userData.baseOpacity;
+      });
+      if (t >= 1) {
+        reversing = false;
+        diveOverlay.style.opacity = '0';
+        camera.position.copy(HOME_POS);
+        camera.lookAt(HOME_LOOK);
+        if (controls) {
+          controls.target.copy(HOME_LOOK);
+          controls.enabled = true;
+          controls.autoRotate = !reducedMotion;
+          controls.update();
+        }
+        container.style.cursor = 'grab';
+      }
+      return;
+    }
+
     var e = easeOutQuad(t);
 
     camera.position.lerpVectors(reverseCamFrom, HOME_POS, e);
@@ -366,7 +406,7 @@
       if (controls) {
         controls.target.copy(HOME_LOOK);
         controls.enabled = true;
-        controls.autoRotate = true;
+        controls.autoRotate = !reducedMotion;
         controls.update();
       }
       container.style.cursor = 'grab';
@@ -511,9 +551,11 @@
     /* Layer float + emissive pulse */
     for (var li = 0; li < layerMeshes.length; li++) {
       var m = layerMeshes[li];
-      if (!diving) {
+      if (!diving && !reducedMotion) {
         var floatY = Math.sin(elapsed * 0.5 + li * 0.4) * 0.04;
         m.position.y = startY + li * layerSpacing + floatY;
+      } else if (!diving) {
+        m.position.y = startY + li * layerSpacing;   // reduced motion: stay put, no bob
       }
 
       /* Smooth transition to target opacity/emissive (faster during a dive) */
@@ -521,7 +563,7 @@
       var tO = m.userData.targetOpacity;
       var tE = m.userData.targetEmissive;
       m.material.opacity += (tO - m.material.opacity) * lerpK;
-      var pulse = diving ? tE : tE + Math.sin(elapsed * 0.8 + li * 0.6) * 0.06;
+      var pulse = (diving || reducedMotion) ? tE : tE + Math.sin(elapsed * 0.8 + li * 0.6) * 0.06;
       m.material.emissiveIntensity += (pulse - m.material.emissiveIntensity) * lerpK;
     }
 
@@ -558,17 +600,19 @@
     }
     }
 
-    /* Particles */
-    var pArr = pGeo.getAttribute('position').array;
-    for (var pi = 0; pi < PARTICLE_COUNT; pi++) {
-      var p3 = pi * 3;
-      pArr[p3] += vel[p3]; pArr[p3+1] += vel[p3+1]; pArr[p3+2] += vel[p3+2];
-      var dist = Math.sqrt(pArr[p3]*pArr[p3] + pArr[p3+1]*pArr[p3+1] + pArr[p3+2]*pArr[p3+2]);
-      if (dist > 32) { pArr[p3] *= 0.4; pArr[p3+1] *= 0.4; pArr[p3+2] *= 0.4; }
+    /* Particles (skipped for reduced-motion — static field, no drift) */
+    if (!reducedMotion) {
+      var pArr = pGeo.getAttribute('position').array;
+      for (var pi = 0; pi < PARTICLE_COUNT; pi++) {
+        var p3 = pi * 3;
+        pArr[p3] += vel[p3]; pArr[p3+1] += vel[p3+1]; pArr[p3+2] += vel[p3+2];
+        var dist = Math.sqrt(pArr[p3]*pArr[p3] + pArr[p3+1]*pArr[p3+1] + pArr[p3+2]*pArr[p3+2]);
+        if (dist > 32) { pArr[p3] *= 0.4; pArr[p3+1] *= 0.4; pArr[p3+2] *= 0.4; }
+      }
+      pGeo.getAttribute('position').needsUpdate = true;
+      particles.rotation.y += 0.0002 + warp * 0.02;
+      particles.rotation.x += 0.0001 + warp * 0.012;
     }
-    pGeo.getAttribute('position').needsUpdate = true;
-    particles.rotation.y += 0.0002 + warp * 0.02;
-    particles.rotation.x += 0.0001 + warp * 0.012;
 
     /* Warp amplification — particles bloom + streak as speed builds */
     particles.material.size = 0.045 + warp * 0.14;
