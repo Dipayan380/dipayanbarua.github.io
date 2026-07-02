@@ -1,7 +1,8 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║  dipayanbarua.com.au — The Gateway · 10-Layer 3D Stack      ║
+   ║  Cloud Constellation — The Gateway · 10-Layer 3D Stack      ║
    ║  OrbitControls · Raycaster · Role Highlighting              ║
    ║  Full-Page Canvas · Emissive Glow · 1200 Particles          ║
+   ║  Session 3 — camera dive transitions                        ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 (function () {
@@ -180,10 +181,146 @@
     tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
   }, { passive: true });
 
-  container.addEventListener('click', function () {
-    if (hoveredLayer && hoveredLayer.userData.domain) {
-      window.location.href = hoveredLayer.userData.domain.path;
+  /* ─── CAMERA DIVE TRANSITION ──────────────────────────────── */
+  /* Click a layer → camera accelerates through the particle tunnel,
+     punches through the slab, colour-washes to the domain accent, then
+     hands off to the domain page (which blooms in from the same colour
+     via the inbound fade in app.js). */
+
+  var DIVE_DURATION = 1100;      // ms
+  var BASE_FOV = camera.fov;     // 50
+  var MAX_FOV = 92;              // speed-line punch
+  var diving = false;            // read by animate()
+  var warp = 0;                  // 0..1 particle amplification, read by animate()
+  var navigated = false;
+
+  var diveStart = 0;
+  var camStart = new THREE.Vector3();
+  var camEnd = new THREE.Vector3();
+  var lookStart = new THREE.Vector3();
+  var lookEnd = new THREE.Vector3();
+  var lookCur = new THREE.Vector3();
+  var diveMesh = null;
+  var divePath = null;
+  var diveHex = '#7DABFF';
+
+  /* Easing */
+  function clamp01(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function easeInCubic(t) { return t * t * t; }
+  function easeInQuart(t) { return t * t * t * t; }
+  function easeInQuint(t) { return t * t * t * t * t; }
+  function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
+  function smoothstep(a, b, x) {
+    var t = clamp01((x - a) / (b - a));
+    return t * t * (3 - 2 * t);
+  }
+
+  /* Full-screen warp/colour overlay (built once, reused) */
+  function buildDiveGradient(hex) {
+    return 'radial-gradient(circle at 50% 45%, #ffffff 0%, ' + hex + ' 32%, rgba(4,6,14,0.96) 100%)';
+  }
+  var diveOverlay = document.createElement('div');
+  diveOverlay.setAttribute('aria-hidden', 'true');
+  diveOverlay.style.cssText = 'position:fixed;inset:0;z-index:100000;pointer-events:none;opacity:0;will-change:opacity;';
+  document.body.appendChild(diveOverlay);
+
+  function startDive(mesh) {
+    if (diving || !mesh || !mesh.userData.domain) return;
+    diving = true;
+    navigated = false;
+    diveStart = performance.now();
+    diveMesh = mesh;
+    divePath = mesh.userData.domain.path;
+    diveHex = '#' + new THREE.Color(mesh.userData.domain.color).getHexString();
+
+    /* Freeze orbit input */
+    if (controls) { controls.enabled = false; controls.autoRotate = false; }
+    tooltip.style.opacity = '0';
+    container.style.cursor = 'default';
+
+    /* Camera path: from where we are, straight through the slab and out
+       the far side (overshoot along the view axis into the tunnel). */
+    camStart.copy(camera.position);
+    var P = mesh.getWorldPosition(new THREE.Vector3());
+    var dir = P.clone().sub(camStart).normalize();
+    camEnd.copy(P).addScaledVector(dir, 2.4);        // punch through
+    lookStart.copy(controls ? controls.target : new THREE.Vector3(0, 1.5, 0));
+    lookEnd.copy(P).addScaledVector(dir, 8);          // aim down the tunnel
+
+    /* Spotlight the chosen layer, recede the rest for tunnel focus */
+    layerMeshes.forEach(function (m) {
+      if (m === mesh) {
+        m.userData.targetEmissive = 1.6;
+        m.userData.targetOpacity = 1.0;
+      } else {
+        m.userData.targetEmissive = 0.04;
+        m.userData.targetOpacity = 0.06;
+      }
+    });
+
+    /* Prime the overlay + arm the inbound bloom on the destination page */
+    diveOverlay.style.background = buildDiveGradient(diveHex);
+    try {
+      sessionStorage.setItem('cc-dive', JSON.stringify({ c: diveHex, ts: Date.now() }));
+    } catch (e) {}
+  }
+
+  function updateDive(now) {
+    var t = clamp01((now - diveStart) / DIVE_DURATION);
+
+    /* Position accelerates (easeInCubic); aim locks onto the slab fast */
+    camera.position.lerpVectors(camStart, camEnd, easeInCubic(t));
+    lookCur.lerpVectors(lookStart, lookEnd, easeOutQuad(t));
+    camera.lookAt(lookCur);
+
+    /* FOV punch in the back half → speed-line rush */
+    var fovT = t < 0.45 ? 0 : easeInQuint((t - 0.45) / 0.55);
+    camera.fov = BASE_FOV + (MAX_FOV - BASE_FOV) * fovT;
+    camera.updateProjectionMatrix();
+
+    /* Particle amplification (read in the particle block) */
+    warp = easeInQuart(t);
+
+    /* Colour wash slams in over the final ~40% */
+    diveOverlay.style.opacity = String(smoothstep(0.58, 1.0, t));
+
+    /* Hand off at peak — the new page load hides behind the flash */
+    if (!navigated && t >= 0.985) {
+      navigated = true;
+      window.location.href = divePath;
     }
+  }
+
+  /* Robust click: raycast fresh from the click point (works whether the
+     event lands on the canvas or the stack-zone overlay), with a drag
+     guard so rotating the stack never fires a dive. */
+  var downX = 0, downY = 0, downMoved = false;
+  function onDown(e) {
+    var p = e.touches ? e.touches[0] : e;
+    downX = p.clientX; downY = p.clientY; downMoved = false;
+  }
+  function onUp(e) {
+    if (diving) return;
+    var p = e.changedTouches ? e.changedTouches[0] : e;
+    var moved = Math.abs(p.clientX - downX) + Math.abs(p.clientY - downY);
+    if (moved > 6) return;  // was a drag/orbit, not a click
+    var rect = container.getBoundingClientRect();
+    var v = new THREE.Vector2(
+      ((p.clientX - rect.left) / rect.width) * 2 - 1,
+      -((p.clientY - rect.top) / rect.height) * 2 + 1
+    );
+    raycaster.setFromCamera(v, camera);
+    var hits = raycaster.intersectObjects(layerMeshes);
+    if (hits.length > 0) startDive(hits[0].object);
+  }
+
+  var zone = document.getElementById('stack-zone');
+  [container, zone].forEach(function (el) {
+    if (!el) return;
+    el.addEventListener('mousedown', onDown, { passive: true });
+    el.addEventListener('mouseup', onUp);
+    el.addEventListener('touchstart', onDown, { passive: true });
+    el.addEventListener('touchend', onUp);
   });
 
   /* ─── ROLE HIGHLIGHTING ───────────────────────────────────── */
@@ -274,23 +411,29 @@
     var elapsed = clock.getElapsedTime();
     frame++;
 
-    if (controls) controls.update();
+    var now = performance.now();
+    if (diving) updateDive(now);
+    else if (controls) controls.update();
 
     /* Layer float + emissive pulse */
     for (var li = 0; li < layerMeshes.length; li++) {
       var m = layerMeshes[li];
-      var floatY = Math.sin(elapsed * 0.5 + li * 0.4) * 0.04;
-      m.position.y = startY + li * layerSpacing + floatY;
+      if (!diving) {
+        var floatY = Math.sin(elapsed * 0.5 + li * 0.4) * 0.04;
+        m.position.y = startY + li * layerSpacing + floatY;
+      }
 
-      /* Smooth transition to target opacity/emissive */
+      /* Smooth transition to target opacity/emissive (faster during a dive) */
+      var lerpK = diving ? 0.2 : 0.08;
       var tO = m.userData.targetOpacity;
       var tE = m.userData.targetEmissive;
-      m.material.opacity += (tO - m.material.opacity) * 0.08;
-      var pulse = tE + Math.sin(elapsed * 0.8 + li * 0.6) * 0.06;
-      m.material.emissiveIntensity += (pulse - m.material.emissiveIntensity) * 0.08;
+      m.material.opacity += (tO - m.material.opacity) * lerpK;
+      var pulse = diving ? tE : tE + Math.sin(elapsed * 0.8 + li * 0.6) * 0.06;
+      m.material.emissiveIntensity += (pulse - m.material.emissiveIntensity) * lerpK;
     }
 
-    /* Raycaster — hover detection */
+    /* Raycaster — hover detection (skipped during a dive) */
+    if (!diving) {
     raycaster.setFromCamera(mouse, camera);
     var intersects = raycaster.intersectObjects(layerMeshes);
 
@@ -308,7 +451,7 @@
         }
         /* Update tooltip */
         var d = hit.userData.domain;
-        tooltip.innerHTML = '<span style="color:#' + new THREE.Color(d.color).getHexString() + ';font-weight:600;font-size:13px;">' + d.name + '</span><br><span style="color:#8892A4;font-size:11px;">' + d.clusters + ' clusters — click to enter</span>';
+        tooltip.innerHTML = '<span style="color:#' + new THREE.Color(d.color).getHexString() + ';font-weight:600;font-size:13px;">' + d.name + '</span><br><span style="color:#A3AEC2;font-size:11px;">' + d.clusters + ' clusters — click to enter</span>';
         tooltip.style.opacity = '1';
       }
       container.style.cursor = 'pointer';
@@ -320,6 +463,7 @@
       tooltip.style.opacity = '0';
       container.style.cursor = 'grab';
     }
+    }
 
     /* Particles */
     var pArr = pGeo.getAttribute('position').array;
@@ -330,8 +474,13 @@
       if (dist > 32) { pArr[p3] *= 0.4; pArr[p3+1] *= 0.4; pArr[p3+2] *= 0.4; }
     }
     pGeo.getAttribute('position').needsUpdate = true;
-    particles.rotation.y += 0.0002;
-    particles.rotation.x += 0.0001;
+    particles.rotation.y += 0.0002 + warp * 0.02;
+    particles.rotation.x += 0.0001 + warp * 0.012;
+
+    /* Warp amplification — particles bloom + streak as speed builds */
+    particles.material.size = 0.045 + warp * 0.14;
+    particles.material.opacity = 0.7 + warp * 0.3;
+    lines.material.opacity = 0.2 + warp * 0.5;
 
     /* Connecting lines every 3 frames */
     if (frame % 3 === 0) {

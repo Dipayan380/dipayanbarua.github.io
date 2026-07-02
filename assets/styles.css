@@ -1,8 +1,9 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║  dipayanbarua.com.au — Microsoft Cloud Learning Hub         ║
+   ║  Cloud Constellation — dipayanbarua.com.au                  ║
    ║  Neon Sci-Fi · Deep-Space Glassmorphic · Phantom Blue       ║
    ║  Signature Accent: #7DABFF                                  ║
-   ║  10 Domains · 51 Clusters · Three-Tier Navigation           ║
+   ║  10 Domains · 56 Clusters · Three-Tier Navigation           ║
+   ║  Session 3 — brightness/contrast pass                       ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 /* ─── ROOT TOKENS ─────────────────────────────────────────────── */
@@ -10,42 +11,45 @@
   /* Signature accent */
   --accent: #7DABFF;
   --accent-rgb: 125, 171, 255;
-  --accent-dim: rgba(125, 171, 255, 0.15);
-  --accent-glow: rgba(125, 171, 255, 0.25);
-  --accent-subtle: rgba(125, 171, 255, 0.06);
-  --accent-border: rgba(125, 171, 255, 0.18);
+  --accent-dim: rgba(125, 171, 255, 0.22);
+  --accent-glow: rgba(125, 171, 255, 0.35);
+  --accent-subtle: rgba(125, 171, 255, 0.11);
+  --accent-border: rgba(125, 171, 255, 0.30);
+  /* Text-glow helpers (used sparingly on accent labels/numbers + headings) */
+  --accent-text-glow: 0 0 18px rgba(125, 171, 255, 0.45);
+  --heading-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
 
   /* Surfaces */
   --bg-deep: #060810;
   --bg-space: #0A0E18;
-  --bg-panel: rgba(12, 16, 28, 0.85);
-  --bg-glass: rgba(16, 22, 40, 0.65);
-  --bg-glass-hover: rgba(20, 28, 52, 0.75);
-  --bg-card: rgba(14, 20, 36, 0.7);
-  --bg-card-hover: rgba(18, 26, 48, 0.8);
-  --bg-elevated: rgba(20, 28, 48, 0.9);
-  --bg-input: rgba(10, 14, 26, 0.6);
+  --bg-panel: rgba(12, 16, 28, 0.92);
+  --bg-glass: rgba(16, 22, 40, 0.74);
+  --bg-glass-hover: rgba(20, 28, 52, 0.84);
+  --bg-card: rgba(14, 20, 36, 0.80);
+  --bg-card-hover: rgba(18, 26, 48, 0.88);
+  --bg-elevated: rgba(20, 28, 48, 0.95);
+  --bg-input: rgba(10, 14, 26, 0.70);
 
   /* Text */
-  --text-bright: #E8ECF4;
-  --text-primary: #C8D0DC;
-  --text-secondary: #8892A4;
-  --text-muted: #5A6478;
-  --text-dim: #3A4258;
+  --text-bright: #F0F3F9;
+  --text-primary: #D5DCE8;
+  --text-secondary: #A3AEC2;
+  --text-muted: #727E94;
+  --text-dim: #515C74;
 
   /* Borders */
-  --border: rgba(125, 171, 255, 0.08);
-  --border-hover: rgba(125, 171, 255, 0.18);
-  --border-active: rgba(125, 171, 255, 0.35);
-  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border: rgba(125, 171, 255, 0.16);
+  --border-hover: rgba(125, 171, 255, 0.30);
+  --border-active: rgba(125, 171, 255, 0.48);
+  --border-subtle: rgba(255, 255, 255, 0.08);
 
   /* Glassmorphism */
   --glass-blur: blur(24px);
   --glass-blur-heavy: blur(40px);
-  --glass-border: 0.5px solid var(--border);
-  --glass-border-hover: 0.5px solid var(--border-hover);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(125, 171, 255, 0.03);
-  --glass-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 80px rgba(125, 171, 255, 0.06);
+  --glass-border: 1px solid var(--border);
+  --glass-border-hover: 1px solid var(--border-hover);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(125, 171, 255, 0.06);
+  --glass-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 80px rgba(125, 171, 255, 0.11);
 
   /* Radii */
   --radius-sm: 8px;
@@ -149,6 +153,7 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-bright);
   line-height: 1.3;
   font-weight: 600;
+  text-shadow: var(--heading-shadow);
 }
 
 h1 { font-size: 2.25rem; letter-spacing: -0.02em; }
@@ -167,6 +172,7 @@ p:last-child { margin-bottom: 0; }
   font-weight: 600;
   color: var(--accent);
   margin-bottom: var(--space-sm);
+  text-shadow: var(--accent-text-glow);
 }
 
 .lead {
@@ -228,6 +234,7 @@ p:last-child { margin-bottom: 0; }
   font-weight: 800;
   color: #0A0E18;
   letter-spacing: 0.5px;
+  box-shadow: 0 0 16px rgba(125, 171, 255, 0.35);
 }
 
 .nav-links {
@@ -585,6 +592,7 @@ p:last-child { margin-bottom: 0; }
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--accent);
+  text-shadow: var(--accent-text-glow);
 }
 
 .profile-card .stat-label {
@@ -660,6 +668,7 @@ p:last-child { margin-bottom: 0; }
   letter-spacing: 1px;
   margin-bottom: var(--space-sm);
   font-family: var(--font-mono);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--card-accent, var(--accent)) 45%, transparent);
 }
 
 .domain-card .card-title {
@@ -855,31 +864,31 @@ p:last-child { margin-bottom: 0; }
 }
 
 .callout.info {
-  background: rgba(125, 171, 255, 0.04);
+  background: rgba(125, 171, 255, 0.10);
   border-color: var(--content-info);
   color: var(--content-info);
 }
 
 .callout.tip {
-  background: rgba(167, 139, 250, 0.04);
+  background: rgba(167, 139, 250, 0.10);
   border-color: var(--content-tip);
   color: var(--content-tip);
 }
 
 .callout.warning {
-  background: rgba(251, 191, 36, 0.04);
+  background: rgba(251, 191, 36, 0.10);
   border-color: var(--content-warning);
   color: var(--content-warning);
 }
 
 .callout.danger {
-  background: rgba(248, 113, 113, 0.04);
+  background: rgba(248, 113, 113, 0.10);
   border-color: var(--content-danger);
   color: var(--content-danger);
 }
 
 .callout.note {
-  background: rgba(148, 163, 184, 0.04);
+  background: rgba(148, 163, 184, 0.10);
   border-color: var(--content-note);
   color: var(--content-note);
 }

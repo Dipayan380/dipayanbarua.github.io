@@ -1,10 +1,46 @@
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║  dipayanbarua.com.au — Interaction Layer                    ║
+   ║  Cloud Constellation — Interaction Layer                    ║
    ║  Command Palette · Search · Scroll Reveals · Cursor Glow   ║
+   ║  Inbound dive-bloom handoff (pairs with gateway.js)         ║
    ╚══════════════════════════════════════════════════════════════╝ */
 
 (function () {
   'use strict';
+
+  /* ─── INBOUND DIVE BLOOM ──────────────────────────────────── */
+  /* If we arrived via a camera dive from the homepage, the destination
+     page blooms in from the exact domain colour the dive flashed to —
+     so the page swap reads as one continuous motion, not a hard cut. */
+  (function inboundBloom() {
+    var raw;
+    try { raw = sessionStorage.getItem('cc-dive'); } catch (e) { return; }
+    if (!raw) return;
+    try { sessionStorage.removeItem('cc-dive'); } catch (e) {}
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var data;
+    try { data = JSON.parse(raw); } catch (e) { return; }
+    if (!data || !data.c || (Date.now() - data.ts) > 4000) return;  // stale/ignore
+
+    var hex = data.c;
+    var gradient = 'radial-gradient(circle at 50% 45%, #ffffff 0%, ' + hex + ' 32%, rgba(4,6,14,0.96) 100%)';
+
+    function mount() {
+      var ov = document.createElement('div');
+      ov.setAttribute('aria-hidden', 'true');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:100000;pointer-events:none;opacity:1;' +
+        'background:' + gradient + ';transition:opacity 0.75s cubic-bezier(0.22,1,0.36,1);will-change:opacity;';
+      document.body.appendChild(ov);
+      /* Two RAFs so the initial opacity:1 paints before we fade out */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { ov.style.opacity = '0'; });
+      });
+      setTimeout(function () { if (ov.parentNode) ov.parentNode.removeChild(ov); }, 900);
+    }
+
+    if (document.body) mount();
+    else document.addEventListener('DOMContentLoaded', mount);
+  })();
 
   /* ─── SEARCH INDEX ────────────────────────────────────────── */
   const SEARCH_INDEX = [
