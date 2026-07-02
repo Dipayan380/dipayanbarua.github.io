@@ -208,8 +208,12 @@
   var BASE_FOV = camera.fov;     // 50
   var MAX_FOV = 92;              // speed-line punch
   var diving = false;            // read by animate()
+  var reversing = false;         // true while flying back OUT of a dive (bfcache return)
   var warp = 0;                  // 0..1 particle amplification, read by animate()
   var navigated = false;
+
+  var HOME_POS = new THREE.Vector3(0, 5, 17);
+  var HOME_LOOK = new THREE.Vector3(0, 1.5, 0);
 
   var diveStart = 0;
   var camStart = new THREE.Vector3();
@@ -312,6 +316,74 @@
     }
   }
 
+  /* ─── REVERSE DIVE — flying back OUT, on return via Back button ──
+     The browser's bfcache restores this page as a frozen snapshot
+     exactly as it looked the instant we navigated away: mid-flash,
+     camera punched through the slab, diveOverlay near-opaque. Rather
+     than just snapping that back to normal, animate it in reverse —
+     camera retreats from the punched-through position back to the
+     resting pose while the colour wash fades out, so returning feels
+     like flying back out of the tunnel instead of a jarring reset. */
+  var reverseStart = 0;
+  var reverseCamFrom = new THREE.Vector3();
+  var reverseLookFrom = new THREE.Vector3();
+
+  function startReverseDive() {
+    reversing = true;
+    diving = false;
+    navigated = false;
+    reverseStart = performance.now();
+    reverseCamFrom.copy(camera.position);
+    reverseLookFrom.copy(lookCur);
+    tooltip.style.opacity = '0';
+  }
+
+  function updateReverseDive(now) {
+    var t = clamp01((now - reverseStart) / DIVE_DURATION);
+    var e = easeOutQuad(t);
+
+    camera.position.lerpVectors(reverseCamFrom, HOME_POS, e);
+    lookCur.lerpVectors(reverseLookFrom, HOME_LOOK, e);
+    camera.lookAt(lookCur);
+
+    camera.fov = BASE_FOV + (MAX_FOV - BASE_FOV) * (1 - easeInQuart(t));
+    camera.updateProjectionMatrix();
+
+    warp = 1 - easeInQuart(t);
+    diveOverlay.style.opacity = String(1 - smoothstep(0, 0.55, t));
+
+    /* Layers ease back to their normal resting glow together */
+    layerMeshes.forEach(function (m) {
+      m.userData.targetEmissive = m.userData.baseEmissive;
+      m.userData.targetOpacity = m.userData.baseOpacity;
+    });
+
+    if (t >= 1) {
+      reversing = false;
+      diveOverlay.style.opacity = '0';
+      camera.fov = BASE_FOV;
+      camera.updateProjectionMatrix();
+      if (controls) {
+        controls.target.copy(HOME_LOOK);
+        controls.enabled = true;
+        controls.autoRotate = true;
+        controls.update();
+      }
+      container.style.cursor = 'grab';
+    }
+  }
+
+  /* If this page is being restored from bfcache mid-dive (the normal
+     case — we navigate away right at the peak of the flash), play the
+     reverse animation instead of leaving a frozen, stuck-looking
+     overlay on screen. A fresh (non-bfcache) load never has diving
+     true at this point, so this only fires on an actual Back return. */
+  window.addEventListener('pageshow', function (ev) {
+    if (ev.persisted && (diving || diveOverlay.style.opacity !== '0')) {
+      startReverseDive();
+    }
+  });
+
   /* Robust click: unified Pointer Events (covers mouse, touch, and pen
      in one code path — no more separate mouse/touch listeners to keep
      in sync). Raycast fresh from the pointer-up point against the
@@ -322,7 +394,7 @@
     downX = e.clientX; downY = e.clientY;
   }
   function onPointerUp(e) {
-    if (diving) return;
+    if (diving || reversing) return;
     var moved = Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY);
     if (moved > 8) return;  // was a drag/orbit, not a tap/click
     var rect = container.getBoundingClientRect();
@@ -433,6 +505,7 @@
 
     var now = performance.now();
     if (diving) updateDive(now);
+    else if (reversing) updateReverseDive(now);
     else if (controls) controls.update();
 
     /* Layer float + emissive pulse */
@@ -452,8 +525,8 @@
       m.material.emissiveIntensity += (pulse - m.material.emissiveIntensity) * lerpK;
     }
 
-    /* Raycaster — hover detection (skipped during a dive) */
-    if (!diving) {
+    /* Raycaster — hover detection (skipped during a dive or its reverse) */
+    if (!diving && !reversing) {
     raycaster.setFromCamera(mouse, camera);
     var intersects = raycaster.intersectObjects(hitMeshes);
 
